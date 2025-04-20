@@ -1,9 +1,13 @@
 #cloud-config
 users:
-- name: gadgieOps
+- name: gadge
+  gecos: gadgieOps
+  ssh_authorized_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKS6QAYnvqS7fTI7KvoAUx+O89XX0Z8H1Hp7xW+GDbGY gadgieOps@gmail.com
   sudo: ['ALL=(ALL) NOPASSWD:ALL']
+  lock_passwd: true
   groups: sudo, users
-  shell: /bin/bash
+  shell: /bin/zsh
 
 timezone: UTC
 ssh_pwauth: false
@@ -11,13 +15,4 @@ ssh_pwauth: false
 package_update: true
 package_upgrade: true
 packages:
-  - vim
-  - git
-  - python3-pip
-
-write_files:
-  - path: /home/vagrant/cloud-init-success.txt
-    content: |
-      Cloud-init has successfully configured this instance.
-    owner: vagrant:vagrant
-    permissions: '0644'
+  - zsh
