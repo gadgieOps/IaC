@@ -1,0 +1,23 @@
+#cloud-config
+users:
+- name: gadgieOps
+  sudo: ['ALL=(ALL) NOPASSWD:ALL']
+  groups: sudo, users
+  shell: /bin/bash
+
+timezone: UTC
+ssh_pwauth: false
+
+package_update: true
+package_upgrade: true
+packages:
+  - vim
+  - git
+  - python3-pip
+
+write_files:
+  - path: /home/vagrant/cloud-init-success.txt
+    content: |
+      Cloud-init has successfully configured this instance.
+    owner: vagrant:vagrant
+    permissions: '0644'

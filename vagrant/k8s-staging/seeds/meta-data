@@ -1,0 +1,2 @@
+instance-id: k8s-staging
+local-hostname: k8s-staging-node
