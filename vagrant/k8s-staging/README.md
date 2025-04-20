@@ -76,7 +76,7 @@ vagrant destroy -f
 If the private network does not work as expected or Vagrant throws an error regarding missing networks, you may need to **manually add a network in VMware** before running `vagrant up`.
 
 Refer to this issue for a step-by-step workaround:  
-👉 https://github.com/clong/DetectionLab/issues/602
+👉 [DetectionLab Issue #602](https://github.com/clong/DetectionLab/issues/602)
 
 ```bash
 sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_2_DHCP no
@@ -96,9 +96,10 @@ In some environments, the **VMware Utility service** (used by Vagrant to interac
 
 If you get errors like "Unable to connect to the VMware utility", follow the official documentation to start the utility manually:
 
-👉 https://developer.hashicorp.com/vagrant/docs/providers/vmware/vagrant-vmware-utility
+👉 [VMware Utility Documentation](https://developer.hashicorp.com/vagrant/docs/providers/vmware/vagrant-vmware-utility)
 
 > Example for macOS:
+
 ```bash
 sudo /Library/Application\ Support/HashiCorp/Vagrant-vmware-utility/vagrant-vmware-utility
 ```
