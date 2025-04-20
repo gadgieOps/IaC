@@ -1,4 +1,20 @@
 ##########################
+#         Ansible        #
+##########################
+
+# Inventory files
+inventory
+inventory.*
+
+# Vault files
+*.vault
+*.vault.yml
+*.vault.json
+
+# Playbook artifacts
+*.retry
+
+##########################
 #      Credentials       #
 ##########################
 
@@ -13,6 +29,23 @@
 .env.*
 secrets.yml
 secrets.json
+
+##########################
+#      Common Files      #
+##########################
+
+# Common file extensions
+*.log
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+*.lock
+*.pid
+*.out
+*.err
+*.iso
 
 ##########################
 #       OS Files         #

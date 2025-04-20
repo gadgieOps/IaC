@@ -1,0 +1,15 @@
+all:
+  children:
+    k8s_staging:
+      vars:
+        ansible_user: vagrant
+      hosts:
+        k8s_staging_01:
+          ansible_host: 192.168.6.2
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/k8s-staging/.vagrant/machines/k8s-staging-01/vmware_desktop/private_key"
+        k8s_staging_02:
+          ansible_host: 192.168.6.3
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/k8s-staging/.vagrant/machines/k8s-staging-02/vmware_desktop/private_key"
+        k8s_staging_03:
+          ansible_host: 192.168.6.4
+          ansible_ssh_private_key_file: "{{ playbook_dir }}/../../vagrant/k8s-staging/.vagrant/machines/k8s-staging-03/vmware_desktop/private_key"
