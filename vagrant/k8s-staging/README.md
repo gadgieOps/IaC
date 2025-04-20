@@ -18,7 +18,7 @@ Before you get started, make sure you have the following installed:
 
 ## 📦 Box Used
 
-- **Base Box:** `bento/ubuntu-24.04`
+- **Base Box:** `gadgie/ubuntu24.04`
 
 This box will be automatically downloaded the first time you run `vagrant up`.
 
@@ -30,9 +30,9 @@ Three VMs will be created:
 
 | Node Name        | IP Address     | Memory | CPUs | Disk  |
 |------------------|----------------|--------|------|-------|
-| k8s-staging-1    | 192.168.6.2    | 4 GB   | 2    | 96 GB |
-| k8s-staging-2    | 192.168.6.3    | 4 GB   | 2    | 96 GB |
-| k8s-staging-3    | 192.168.6.4    | 4 GB   | 2    | 96 GB |
+| k8s-staging-01    | 192.168.6.2    | 4 GB   | 2    | 96 GB |
+| k8s-staging-02    | 192.168.6.3    | 4 GB   | 2    | 96 GB |
+| k8s-staging-03    | 192.168.6.4    | 4 GB   | 2    | 96 GB |
 
 - Hostnames are automatically set per node.
 - Each VM is on a **private network** with static IP configuration.
@@ -69,7 +69,7 @@ vagrant destroy -f
 
 ---
 
-## ⚠️ Known Issues & Troubleshooting
+## ⚠️ Notes
 
 ### 1. 💡 **VMware Network Setup Required**
 
@@ -102,4 +102,12 @@ If you get errors like "Unable to connect to the VMware utility", follow the off
 
 ```bash
 sudo /Library/Application\ Support/HashiCorp/Vagrant-vmware-utility/vagrant-vmware-utility
+```
+
+### 3. 🌩️ **Generating the `cloud-init.iso`**
+
+To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a simple Bash script. This ISO includes both the `user-data` and `meta-data` files, which are used by Cloud-init during the VM’s first boot to configure system settings, users, packages, and more.
+
+```bash
+./build-iso.sh
 ```
