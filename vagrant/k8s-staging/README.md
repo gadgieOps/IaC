@@ -101,7 +101,7 @@ If you get errors like "Unable to connect to the VMware utility", follow the off
 > Example for macOS:
 
 ```bash
-sudo /Library/Application\ Support/HashiCorp/Vagrant-vmware-utility/vagrant-vmware-utility
+sudo launchctl load -w /Library/LaunchDaemons/com.vagrant.vagrant-vmware-utility.plist
 ```
 
 ### 3. 🌩️ **Generating the `cloud-init.iso`**
