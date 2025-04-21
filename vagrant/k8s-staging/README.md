@@ -28,8 +28,8 @@ This box will be automatically downloaded the first time you run `vagrant up`.
 
 Three VMs will be created:
 
-| Node Name        | IP Address     | Memory | CPUs | Disk  |
-|------------------|----------------|--------|------|-------|
+| Node Name         | IP Address     | Memory | CPUs | Disk  |
+|-------------------|----------------|--------|------|-------|
 | k8s-staging-01    | 192.168.6.2    | 4 GB   | 2    | 96 GB |
 | k8s-staging-02    | 192.168.6.3    | 4 GB   | 2    | 96 GB |
 | k8s-staging-03    | 192.168.6.4    | 4 GB   | 2    | 96 GB |
@@ -111,3 +111,17 @@ To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a
 ```bash
 ./build-iso.sh
 ```
+
+### 4. ⚠️ **macOS Networking Caveat (VSCode & Terminal)
+
+If you’re using macOS, you might encounter issues where VSCode or your terminal cannot SSH into the VM or access the local Vagrant network. This is due to macOS security settings that restrict local network access for apps.
+
+### ✅ Fix
+
+1. Open **System Settings**.
+2. Navigate to **Privacy & Security → Local Network**.
+3. Enable network access for:
+    - **Visual Studio Code**
+    - Your preferred Terminal app (e.g., **Terminal**, **iTerm2**)
+
+Without this, tools like vagrant ssh may hang or fail due to blocked network permissions.
