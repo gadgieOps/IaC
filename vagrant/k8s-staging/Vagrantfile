@@ -1,13 +1,23 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.require_version ">= 2.4.3"
+base_image = "gadgie/ubuntu24.04"
+cloud_init = true
+controller_nodes = 3
+memory = 4096
+cpus = 2
 
+# Ensure controller_nodes is at least 1 and an odd number
+if controller_nodes < 1 || controller_nodes.even?
+  raise "controller_nodes must be at least 1 and an odd number"
+end
+
+Vagrant.require_version ">= 2.4.3"
 Vagrant.configure("2") do |config|
 
-    config.vm.box = "gadgie/ubuntu24.04"
+    config.vm.box = base_image
 
-    (1..3).each do |i|
+    (1..controller_nodes).each do |i|
         config.vm.define "k8s-staging-0#{i}" do |vm_config|
 
             vm_config.vm.hostname = "k8s-staging-0#{i}"
@@ -18,12 +28,15 @@ Vagrant.configure("2") do |config|
 
                 vm.gui = false
                 vm.linked_clone = false
-                vm.memory = "4096"
-                vm.cpus = 2
-                vm.vmx["sata0:1.deviceType"] = "cdrom-image"
-                vm.vmx["sata0:1.filename"] = "#{Dir.pwd}/seeds/cloud-init.iso"
-                vm.vmx["sata0:1.startConnected"] = "TRUE"
-                vm.vmx["sata0:1.allowGuestConnectionControl"] = "TRUE"
+                vm.memory = memory
+                vm.cpus = cpus
+
+                if cloud_init
+                    vm.vmx["sata0:1.deviceType"] = "cdrom-image"
+                    vm.vmx["sata0:1.filename"] = "#{Dir.pwd}/seeds/cloud-init.iso"
+                    vm.vmx["sata0:1.startConnected"] = "TRUE"
+                    vm.vmx["sata0:1.allowGuestConnectionControl"] = "TRUE"
+                end
 
             end
         end
