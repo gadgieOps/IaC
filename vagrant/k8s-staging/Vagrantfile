@@ -35,13 +35,8 @@ Vagrant.configure("2") do |config|
         config.vm.define "#{Config::HOSTNAME_BASE}-0#{i}" do |vm_config|
 
             vm_config.vm.hostname = "#{Config::HOSTNAME_BASE}-0#{i}"
+            vm_config.vm.network "private_network", ip: "#{Config::NETWORK}.#{i + 1}", netmask: Config::NETMASK, gateway: Config::GATEWAY
 
-            vm_config.vm.network "private_network" do |net|
-                net.ip = "#{Config::NETWORK}.#{i + 1}"
-                net.netmask = Config::NETMASK
-                net.gateway = Config::GATEWAY
-            end
-            
             vm_config.vm.provider "vmware_desktop" do |vm|
 
                 vm.gui = Config::GUI
