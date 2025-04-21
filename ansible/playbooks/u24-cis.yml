@@ -5,7 +5,7 @@
   gather_facts: true
 
   vars:
-    audit_dir: "{{playbook_dir}}/../../audits"
+    audit_dir: "{{playbook_dir}}/../../audits/{{ inventory_hostname }}/"
 
   tasks:
 
@@ -17,19 +17,10 @@
       delegate_to: localhost
       become: false
 
-    - name: Ensure audit directories for inventory members exist
-      ansible.builtin.file:
-        path: "{{ audit_dir }}/{{ item }}"
-        state: directory
-        mode: '0755'
-      delegate_to: localhost
-      become: false
-      loop: "{{ groups['all'] }}"
-
     - name: Write all ansible facts to audit directory per inventory host
       ansible.builtin.copy:
         content: "{{ ansible_facts | to_nice_json }}"
-        dest: "{{ audit_dir }}/{{ inventory_hostname }}/ansible-facts.json"
+        dest: "{{ audit_dir }}ansible-facts.json"
         mode: '0644'
       delegate_to: localhost
       become: false
@@ -41,5 +32,5 @@
         setup_audit: "{{ audit | default(true) }}"
         run_audit: "{{ audit | default(true) }}"
         audit_only: "{{ auditonly | default(false) }}"
-        fetch_audit_files: "{{ audit | default(true) }}"
-        audit_capture_files_dir: "{{ audit_dir }}"
+        fetch_audit_output: "{{ audit | default(true) }}"
+        audit_output_destination: "{{ audit_dir }}"
