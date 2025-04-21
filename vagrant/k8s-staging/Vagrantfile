@@ -16,7 +16,7 @@ begin
 # Build the cloud-init ISO if specified
 if Config::BUILD_ISO
     script_path = "#{Dir.pwd}/build-iso.sh"
-    system("bash", script_path) or raise "Failed to execute build-iso.sh"
+    system("bash", script_path, out: File::NULL, err: File::NULL) or raise "Failed to execute build-iso.sh"
 end
 
 Vagrant.require_version ">= 2.4.3"

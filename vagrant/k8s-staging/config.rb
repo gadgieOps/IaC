@@ -8,7 +8,7 @@ module Config
     # Cloud Init Configuration
     CLOUD_INIT = true
     CLOUD_INIT_ISO = "#{Dir.pwd}/seeds/cloud-init.iso"
-    BUILD_ISO = false
+    BUILD_ISO = true
 
     # SSH Configuration
     SSH_KEY_TYPE = "ed25519"
