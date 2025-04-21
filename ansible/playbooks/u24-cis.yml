@@ -1,0 +1,10 @@
+---
+- name: Harden Ubuntu 24.04 to CIS Benchmark
+  hosts: all
+  become: true
+  gather_facts: true
+  roles:
+   - role: lockdown_u24-cis
+     vars:
+      run_audit: true
+      ubtu24cis_rule_5_4_2_4: false

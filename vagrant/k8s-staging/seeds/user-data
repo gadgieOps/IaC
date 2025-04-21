@@ -2,29 +2,28 @@
 users:
 - name: gadge
   gecos: gadgieOps
+  passwd: $6$/U/pKvXy$6ooZDenuTEq5nr6GFoWuU/Xl2ziq6piZrX9ABFYSMst6P4ZhEgUGnlhD6nfEvl0B1loo9IYLzT9/wLACjFQ5l.
   ssh_authorized_keys:
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKS6QAYnvqS7fTI7KvoAUx+O89XX0Z8H1Hp7xW+GDbGY gadgieOps@gmail.com
   groups: sudo, users
-  sudo: ['ALL=(ALL) NOPASSWD:ALL']
   lock_passwd: true
   shell: /bin/bash
 - name: ansible
   gecos: Ansible
+  passwd: $6$+kfrw2zL$GNDoLyzKdnhDPCJ1UCGOnmJxhV1L/ZGUuOKyY3TClhsapCM8C8lPvWNRHPK6JFAI58b3zD92Ukn5MoqCU/c59.
   ssh_authorized_keys:
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBPMOEweLkI8Hg94k4cZsmw+MioClH6kVBGatNwN4f/C ansible@gadgieOps.com
   groups: sudo
-  sudo: ['ALL=(ALL) NOPASSWD:ALL']
   lock_passwd: true
-  no_user_group: true
-  no_create_home: true
-  system: true
-  shell: /bin/false
+  shell: /bin/bash
+
+chpasswd:
+  list: |
+    root: $6$uVyBxMkM$4hogyn2yb.88GDcOycWIFhyiD3yhKRCg/IJL2dSxxtCEvjj/MosMCiQblrz8jCECoSczIJQzO/wVOczWegoq4/
+  expire: False
 
 timezone: UTC
 ssh_pwauth: false
 
 package_update: true
 package_upgrade: true
-
-runcmd:
-  - sudo userdel -r vagrant || true

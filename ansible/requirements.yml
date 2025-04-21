@@ -1,0 +1,4 @@
+roles:
+- name: lockdown_u24-cis
+  src: https://github.com/ansible-lockdown/UBUNTU24-CIS.git
+  version: "1.0.1"
