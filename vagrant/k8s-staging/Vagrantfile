@@ -19,13 +19,13 @@ if Config::BUILD_ISO
     system("bash", script_path, out: File::NULL, err: File::NULL) or raise "Failed to execute build-iso.sh"
 end
 
-Vagrant.require_version ">= 2.4.3"
-Vagrant.configure("2") do |config|
+Vagrant.require_version Config::VAGRANT_VERSION
+Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
 
     # VM Config
     config.vm.box = Config::BASE_IMAGE
-    config.vm.synced_folder ".", "/vagrant", disabled: true
-    config.vm.allow_fstab_modification = false
+    config.vm.synced_folder ".", "/vagrant", disabled: Config::DISABLE_SHARED_FOLDER
+    config.vm.allow_fstab_modification = Config::ALLOW_FSTAB_MODIFICATION
 
     # SSH Config
     config.ssh.insert_key = Config::SSH_INSERT_KEY
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
             vm_config.vm.hostname = "#{Config::HOSTNAME_BASE}-0#{i}"
             vm_config.vm.network "private_network", ip: "#{Config::NETWORK}.#{i + 1}", netmask: Config::NETMASK, gateway: Config::GATEWAY
 
-            vm_config.vm.provider "vmware_desktop" do |vm|
+            vm_config.vm.provider Config::PROVIDER do |vm|
 
                 vm.gui = Config::GUI
                 vm.linked_clone = Config::LINKED_CLONE

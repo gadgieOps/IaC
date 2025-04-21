@@ -1,10 +1,19 @@
 # config.rb
 
 module Config
+    # This module contains configuration settings for the Vagrant environment.
+
+    # Vagrant Configuration
+    VAGRANT_VERSION = ">= 2.4.3"
+    VAGRANT_CONFIG_VERSION = "2"
+    PROVIDER = "vmware_desktop"
+
     # Environment Configuration
     BASE_IMAGE = "gadgie/ubuntu24.04"
     HOSTNAME_BASE = "k8s-staging"
-  
+    DISABLE_SHARED_FOLDER = true
+    ALLOW_FSTAB_MODIFICATION = false
+
     # Cloud Init Configuration
     CLOUD_INIT = true
     CLOUD_INIT_ISO = "#{Dir.pwd}/seeds/cloud-init.iso"
@@ -30,10 +39,16 @@ module Config
   
     def self.validate!
       errors = []
-  
+
+      errors << "VAGRANT_VERSION must be a non-empty String" unless VAGRANT_VERSION.is_a?(String) && !VAGRANT_VERSION.empty?
+      errors << "VAGRANT_CONFIG_VERSION must be a non-empty String" unless VAGRANT_CONFIG_VERSION.is_a?(String) && !VAGRANT_CONFIG_VERSION.empty?
+      errors << "PROVIDER must be a non-empty String" unless PROVIDER.is_a?(String) && !PROVIDER.empty?
+      
       errors << "BASE_IMAGE must be a non-empty String" unless BASE_IMAGE.is_a?(String) && !BASE_IMAGE.empty?
       errors << "HOSTNAME_BASE must be a non-empty String" unless HOSTNAME_BASE.is_a?(String) && !HOSTNAME_BASE.empty?
-  
+      errors << "DISABLE_SHARED_FOLDER must be true or false" unless [true, false].include?(DISABLE_SHARED_FOLDER)
+      errors << "ALLOW_FSTAB_MODIFICATION must be true or false" unless [true, false].include?(ALLOW_FSTAB_MODIFICATION)
+
       errors << "CLOUD_INIT must be true or false" unless [true, false].include?(CLOUD_INIT)
       errors << "CLOUD_INIT_ISO must be a valid path string ending in .iso" unless CLOUD_INIT_ISO.is_a?(String) && File.extname(CLOUD_INIT_ISO) == ".iso"
       errors << "BUILD_ISO must be true or false" unless [true, false].include?(BUILD_ISO)
