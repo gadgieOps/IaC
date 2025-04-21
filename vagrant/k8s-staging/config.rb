@@ -11,6 +11,7 @@ module Config
     BUILD_ISO = true
 
     # SSH Configuration
+    SSH_INSERT_KEY = false
     SSH_KEY_TYPE = "ed25519"
   
     # Cluster Configuration

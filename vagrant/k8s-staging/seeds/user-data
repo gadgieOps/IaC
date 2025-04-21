@@ -16,3 +16,6 @@ package_update: true
 package_upgrade: true
 packages:
   - zsh
+
+runcmd:
+  - sudo userdel -r vagrant || true
