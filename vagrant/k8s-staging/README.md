@@ -4,11 +4,11 @@ This Vagrant configuration sets up a **three-node Kubernetes staging cluster** u
 
 Each VM is provisioned with a static IP, dedicated disk, and custom compute resources — perfect for testing multi-node environments like Kubernetes.
 
+Cloud-init is used to configure provision the VMs. The intention is to not rely on Vagrant's in built mechanisms and to focus on building a realistic representation of my physical infastructure.
+
 ---
 
-## 🔧 Requirements
-
-Before you get started, make sure you have the following installed:
+## Requirements
 
 - [Vagrant](https://www.vagrantup.com/)
 - [VMware Fusion / Workstation Pro](https://www.vmware.com/products/workstation-pro.html)
@@ -16,32 +16,21 @@ Before you get started, make sure you have the following installed:
 
 ---
 
-## 📦 Box Used
+## Box Used
 
 - **Base Box:** `gadgie/ubuntu24.04`
 
-This box will be automatically downloaded the first time you run `vagrant up`.
+This box will be automatically downloaded the first time you run `vagrant up`. This box is based of bento/ubuntu-24.04, it simply has cloud-init re-enabled.
 
 ---
 
-## 🖥️ VM Configuration
+## Configuration
 
-Three VMs will be created:
-
-| Node Name         | IP Address     | Memory | CPUs | Disk  |
-|-------------------|----------------|--------|------|-------|
-| k8s-staging-01    | 192.168.6.2    | 4 GB   | 2    | 96 GB |
-| k8s-staging-02    | 192.168.6.3    | 4 GB   | 2    | 96 GB |
-| k8s-staging-03    | 192.168.6.4    | 4 GB   | 2    | 96 GB |
-
-- Hostnames are automatically set per node.
-- Each VM is on a **private network** with static IP configuration.
-- GUI is disabled (headless mode).
-- `linked_clone` is disabled for full provisioning of virtual disks.
+Configuration is found in config.rb with basic input validation.
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ### Start the cluster
 
@@ -52,7 +41,7 @@ vagrant up
 ### SSH into a node
 
 ```bash
-vagrant ssh k8s-staging-1
+ssh -l gadge -i <key path> <node ip>
 ```
 
 ### Shut down the cluster
@@ -69,14 +58,14 @@ vagrant destroy -f
 
 ---
 
-## ⚠️ Notes
+## Notes
 
-### 1. 💡 **VMware Network Setup Required**
+### 1. **VMware Network Setup Required**
 
 If the private network does not work as expected or Vagrant throws an error regarding missing networks, you may need to **manually add a network in VMware** before running `vagrant up`.
 
 Refer to this issue for a step-by-step workaround:  
-👉 [DetectionLab Issue #602](https://github.com/clong/DetectionLab/issues/602)
+[DetectionLab Issue #602](https://github.com/clong/DetectionLab/issues/602)
 
 ```bash
 sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_2_DHCP no
@@ -90,13 +79,13 @@ sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --start
 
 ---
 
-### 2. 🛠️ **Manually Start the VMware Utility**
+### 2. **Manually Start the VMware Utility**
 
 In some environments, the **VMware Utility service** (used by Vagrant to interact with VMware) may not be running automatically.
 
 If you get errors like "Unable to connect to the VMware utility", follow the official documentation to start the utility manually:
 
-👉 [VMware Utility Documentation](https://developer.hashicorp.com/vagrant/docs/providers/vmware/vagrant-vmware-utility)
+[VMware Utility Documentation](https://developer.hashicorp.com/vagrant/docs/providers/vmware/vagrant-vmware-utility)
 
 > Example for macOS:
 
@@ -104,7 +93,7 @@ If you get errors like "Unable to connect to the VMware utility", follow the off
 sudo launchctl load -w /Library/LaunchDaemons/com.vagrant.vagrant-vmware-utility.plist
 ```
 
-### 3. 🌩️ **Generating the `cloud-init.iso`**
+### 3. **Generating the `cloud-init.iso`**
 
 To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a simple Bash script. This ISO includes both the `user-data` and `meta-data` files, which are used by Cloud-init during the VM’s first boot to configure system settings, users, packages, and more.
 
@@ -112,11 +101,13 @@ To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a
 ./build-iso.sh
 ```
 
-### 4. ⚠️ **macOS Networking Caveat (VSCode & Terminal)
+This can also be achieved at runtime by setting BUILD_ISO = true in config.rb.
+
+### 4. **macOS Networking Caveat (local network access required)
 
 If you’re using macOS, you might encounter issues where VSCode or your terminal cannot SSH into the VM or access the local Vagrant network. This is due to macOS security settings that restrict local network access for apps.
 
-### ✅ Fix
+### Fix
 
 1. Open **System Settings**.
 2. Navigate to **Privacy & Security → Local Network**.
