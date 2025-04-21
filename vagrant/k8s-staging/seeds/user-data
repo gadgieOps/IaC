@@ -4,18 +4,27 @@ users:
   gecos: gadgieOps
   ssh_authorized_keys:
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKS6QAYnvqS7fTI7KvoAUx+O89XX0Z8H1Hp7xW+GDbGY gadgieOps@gmail.com
+  groups: sudo, users
   sudo: ['ALL=(ALL) NOPASSWD:ALL']
   lock_passwd: true
-  groups: sudo, users
-  shell: /bin/zsh
+  shell: /bin/bash
+- name: ansible
+  gecos: Ansible
+  ssh_authorized_keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBPMOEweLkI8Hg94k4cZsmw+MioClH6kVBGatNwN4f/C ansible@gadgieOps.com
+  groups: sudo
+  sudo: ['ALL=(ALL) NOPASSWD:ALL']
+  lock_passwd: true
+  no_user_group: true
+  no_create_home: true
+  system: true
+  shell: /bin/false
 
 timezone: UTC
 ssh_pwauth: false
 
 package_update: true
 package_upgrade: true
-packages:
-  - zsh
 
 runcmd:
   - sudo userdel -r vagrant || true
