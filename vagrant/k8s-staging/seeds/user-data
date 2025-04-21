@@ -27,3 +27,6 @@ ssh_pwauth: false
 
 package_update: true
 package_upgrade: true
+
+runcmd:
+  - sudo userdel -r vagrant || true
