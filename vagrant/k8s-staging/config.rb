@@ -28,8 +28,6 @@ module Config
   
     # Network Configuration
     NETWORK = "192.168.6"
-    NETMASK = "255.255.255.224"
-    GATEWAY = "192.168.6.1"
   
     # VM Configuration
     GUI = false
@@ -63,10 +61,7 @@ module Config
       errors << "SSH_KEY_TYPE must be one of #{valid_key_types.join(', ')}" unless valid_key_types.include?(SSH_KEY_TYPE)
       
       ip_regex = /\A\d{1,3}(\.\d{1,3}){2}\z/
-      full_ip_regex = /\A\d{1,3}(\.\d{1,3}){3}\z/
       errors << "NETWORK must be in 'x.x.x' format" unless NETWORK.match?(ip_regex)
-      errors << "NETMASK must be a valid IP format" unless NETMASK.match?(full_ip_regex)
-      errors << "GATEWAY must be a valid IP format" unless GATEWAY.match?(full_ip_regex)
   
       errors << "GUI must be true or false" unless [true, false].include?(GUI)
       errors << "LINKED_CLONE must be true or false" unless [true, false].include?(LINKED_CLONE)
