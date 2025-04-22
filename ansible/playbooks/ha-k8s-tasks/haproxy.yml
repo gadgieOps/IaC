@@ -1,0 +1,42 @@
+---
+- name: Configure UFW to allow k8s API access
+  community.general.ufw:
+    rule: allow
+    port: '443'
+    src: 192.168.6.0/27
+    proto: tcp
+    state: enabled
+  tags: firewall, ufw, haproxy
+
+- name: Deploy HAProxy
+  ansible.builtin.include_role:
+    name: robertdebock.haproxy
+    apply:
+      tags: haproxy
+  vars:
+    haproxy_frontends:
+      - name: k8s-api
+        address: "*"
+        port: 443
+        default_backend: k8s-api
+        mode: tcp
+        option: tcplog
+    haproxy_backend_default_balance: roundrobin
+    haproxy_backends:
+      - name: k8s-api
+        mode: tcp
+        httpcheck: false
+        option: tcplog
+        servers:
+          - name: k8s-staging-01
+            address: "{{ hostvars['k8s_staging_01']['ansible_host'] }}"
+          - name: k8s-staging-02
+            address: "{{ hostvars['k8s_staging_02']['ansible_host'] }}"
+          - name: k8s-staging-03
+            address: "{{ hostvars['k8s_staging_03']['ansible_host'] }}"
+        port: 6443
+        options:
+          - check
+          - check-ssl
+          - "verify none"
+  tags: haproxy

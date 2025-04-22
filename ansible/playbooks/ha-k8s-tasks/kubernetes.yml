@@ -1,0 +1,141 @@
+---
+- name: Set init_node to 'control_plane' for geerlingguy.kubernetes
+  ansible.builtin.set_fact:
+    kubernetes_role: "control_plane"
+  when: inventory_hostname == init_node
+
+- name: Set non lead controllers to "null" to skip initialization in geerlingguy.kubernetes
+  ansible.builtin.set_fact:
+    kubernetes_role: null
+  when: inventory_hostname != init_node
+
+###
+# Disable swap
+# Running kubelet with swap enabled is not supported
+
+- name: Remove swap ftsab entires
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    state: absent
+    regexp: "^.*swap.*$"
+
+- name: Disable swap
+  ansible.builtin.command: swapoff -av
+  register: swapoff
+  failed_when: swapoff.stderr | length > 0
+  changed_when: swapoff.stdout| length > 0
+
+- name: Ensure br_netfilter and overlay modules are loaded
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - br_netfilter
+
+- name: Enable routing between interfaces
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: '1'
+    state: present
+  with_items:
+    - net.ipv4.ip_forward
+
+- name: Allow etcd server client API IN
+  community.general.ufw:
+    rule: allow
+    port: '2379'
+    src: "{{ item}}"
+    proto: tcp
+    state: enabled
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow etcd server client API IN
+  community.general.ufw:
+    rule: allow
+    port: '2380'
+    src: "{{ item}}"
+    proto: tcp
+    state: enabled
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow kubelet API IN
+  community.general.ufw:
+    rule: allow
+    port: '10250'
+    src: "{{ item}}"
+    proto: tcp
+    state: enabled
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow kube scheduler API IN
+  community.general.ufw:
+    rule: allow
+    port: '10259'
+    src: "{{ item}}"
+    proto: tcp
+    state: enabled
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow kube controller manager API IN
+  community.general.ufw:
+    rule: allow
+    port: '10257'
+    src: "{{ item}}"
+    proto: tcp
+    state: enabled
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Install Kubernetes and intialise cluster
+  ansible.builtin.include_role:
+    name: geerlingguy.kubernetes
+    apply:
+      tags: k8s
+  vars:
+    kubernetes_version: "1.32"
+    kubernetes_config_init_configuration:
+      localAPIEndpoint:
+        advertiseAddress: "{{ ansible_host }}"
+      nodeRegistration:
+        name: "{{ ansible_hostname }}"
+        kubeletExtraArgs:
+          address: "{{ ansible_host }}"
+    kubernetes_kubeadm_init_extra_opts: "--upload-certs"
+    kubernetes_config_cluster_configuration:
+      networking:
+        podSubnet: "10.244.0.0/16"
+      controlPlaneEndpoint: "{{ vip }}:443"
+      apiServer:
+        certSans:
+          - "{{ vip }}"
+          - "{{ ansible_host }}"
+      clusterName: kubernetes
+    kubernetes_config_kubelet_configuration:
+      cgroupDriver: "systemd"
+      address: "{{ ansible_host }}"
+      clusterDomain: cluster.local
+      serializeImagePulls: false
+    kubernetes_pod_network:
+      cni: calico
+      cidr: "10.244.0.0/16"
+
+- name: Hold kubernetes packages
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl
+
+- name: Generate join credentials
+  ansible.builtin.include_tasks: join-credentials.yml
+  when: inventory_hostname == init_node
+
+- name: Deploy remaining nodes
+  ansible.builtin.include_tasks: join-cluster.yml
+  when: inventory_hostname != init_node

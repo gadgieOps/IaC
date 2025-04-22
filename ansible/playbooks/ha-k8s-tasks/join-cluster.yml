@@ -1,0 +1,48 @@
+---
+- name: Set worker JoinConfiguration
+  ansible.builtin.set_fact:
+    join_configuration:
+      nodeRegistration:
+        name: "{{ ansible_hostname }}"
+        kubeletExtraArgs:
+          address: "{{ ansible_host }}"
+      discovery:
+        bootstrapToken:
+          apiServerEndpoint: "{{ vip }}:443"
+          token: "{{ hostvars[vars['init_node']]['token'].stdout }}"
+          caCertHashes:
+            - "sha256:{{ hostvars[vars['init_node']]['ca_hash'].stdout }}"
+
+- name: Set controlPlane JoinConfiguration
+  ansible.builtin.set_fact:
+    control_join:
+      controlPlane:
+        localAPIEndpoint:
+          advertiseAddress: "{{ ansible_host }}"
+        certificateKey: "{{ hostvars[vars['init_node']]['cert_key'].stdout_lines[-1] }}"
+
+- name: Set controller JoinConfiguration
+  ansible.builtin.set_fact:
+    join_configuration: "{{ join_configuration | combine(control_join) }}"
+  when: inventory_hostname in groups['all']
+
+- name: Deploy the join config
+  ansible.builtin.template:
+    src: "templates/join-config.j2"
+    dest: "/etc/kubernetes/join.config"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Check if nodes have already joined the cluster
+  ansible.builtin.stat:
+    path: "/etc/kubernetes/kubelet.conf"
+  register: joined
+
+- name: Reset kubeadm
+  ansible.builtin.command: kubeadm reset --force
+  when: not joined.stat.exists
+
+- name: Join the remaining nodes to the cluster
+  ansible.builtin.command: kubeadm join --config /etc/kubernetes/join.config
+  when: not joined.stat.exists

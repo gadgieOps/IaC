@@ -10,5 +10,10 @@ roles:
 - name: geerlingguy.containerd
   src: https://github.com/geerlingguy/ansible-role-containerd.git
   version: "4246310"
+- name: geerlingguy.kubernetes
+  src: https://github.com/geerlingguy/ansible-role-kubernetes.git
+  version: 2b2efa7
 - name: evrardjp.keepalived
   version: "8.2.0"
+- name: robertdebock.haproxy
+  version: "4.8.0"

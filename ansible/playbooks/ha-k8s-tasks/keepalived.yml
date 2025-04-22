@@ -1,0 +1,32 @@
+---
+  ###
+  # TODO: script_user root
+  #       Need to understand what this should be
+
+- name: Deploy keepalived
+  ansible.builtin.include_role:
+    name: evrardjp.keepalived
+    apply:
+      tags: vrrp
+  vars:
+    keepalived_global_defs:
+      - enable_script_security
+      - script_user root
+    keepalived_scripts:
+      chk_haproxy:
+        check_script: "pgrep haproxy"
+    keepalived_instances:
+      vrrp:
+        state: MASTER
+        interface: "{{ cluster_interface }}"
+        virtual_router_id: 42
+        priority: 100
+        advert_int: 1
+        unicast_src_ip: "{{ ansible_host | string }}"
+        authentication_password: "{{ vrrp_password }}"
+        vips:
+          - "{{ vip }} dev {{ cluster_interface }}"
+        unicast_peers: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+        track_scripts:
+          - chk_haproxy
+  tags: vrrp
