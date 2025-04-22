@@ -2,9 +2,9 @@
 users:
 - name: gadge
   gecos: gadgieOps
-  passwd: $6$/U/pKvXy$6ooZDenuTEq5nr6GFoWuU/Xl2ziq6piZrX9ABFYSMst6P4ZhEgUGnlhD6nfEvl0B1loo9IYLzT9/wLACjFQ5l.
+  passwd: $6$iZG9YaMv$VSnwycl6qNT/025Hgb7iC2GFhoAIpZ9L4NffjgHTyX7NLx81FyucSBMJ4UlUYCw6lKWVa1lVXadYwaTzuVznO/
   ssh_authorized_keys:
-    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKS6QAYnvqS7fTI7KvoAUx+O89XX0Z8H1Hp7xW+GDbGY gadgieOps@gmail.com
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHbdWMY5M+U1CnN7qhHgDacdmSsD/efi2OeFCJa1muC/ gadge@gadgieOps.com
   groups: sudo, users
   lock_passwd: true
   shell: /bin/bash
