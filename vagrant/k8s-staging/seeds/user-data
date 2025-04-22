@@ -28,5 +28,40 @@ ssh_pwauth: false
 package_update: true
 package_upgrade: true
 
+# Vagrant overwrites 50-cloud-init.yaml (And apparently everything in /etc/netplan)
+# We write /root/99-network.yaml instead of using the network cloud-init syntax
+# It is then copied into /etc/netplan during runcmd which happens after vagrant does its thing in /etc/netplan
+# This "Disables" vagrants eth0
+write_files:
+  - path: /root/99-network.yaml
+    permissions: "0600"
+    owner: root:root
+    content: |
+      network:
+        version: 2
+        renderer: networkd
+        ethernets:
+          eth0:
+            dhcp4: false
+            dhcp6: false
+            link-local: []
+            optional: true
+          eth1:
+            dhcp4: false
+            dhcp6: false
+            link-local: []
+            optional: false
+            routes:
+              - to: 0.0.0.0/0
+                via: 192.168.6.2
+            nameservers:
+              addresses:
+                - 8.8.8.8
+
 runcmd:
-  - sudo userdel -r vagrant || true
+  - userdel -r vagrant || true
+  - rm /etc/netplan/01-netcfg.yaml || true
+  - rm /etc/netplan/50-cloud-init.yaml || true
+  - chmod 600 /etc/netplan/50-vagrant.yaml || true
+  - mv /root/99-network.yaml /etc/netplan/99-network.yaml || true
+  - netplan apply || true

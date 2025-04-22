@@ -6,7 +6,6 @@ require_relative "config"
 # Validate the configuration
 begin
     Config.validate!
-    puts "Configuration is valid. Continuing..."
     # Proceed with VM setup or other logic
   rescue RuntimeError => e
     puts e.message
@@ -35,7 +34,7 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
         config.vm.define "#{Config::HOSTNAME_BASE}-0#{i}" do |vm_config|
 
             vm_config.vm.hostname = "#{Config::HOSTNAME_BASE}-0#{i}"
-            vm_config.vm.network "private_network", ip: "#{Config::NETWORK}.#{i + 1}", netmask: Config::NETMASK, gateway: Config::GATEWAY
+            vm_config.vm.network "private_network", ip: "#{Config::NETWORK}.#{i + 2}", netmask: Config::NETMASK, gateway: Config::GATEWAY
 
             vm_config.vm.provider Config::PROVIDER do |vm|
 
@@ -52,5 +51,8 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
 
             end
         end
+        # Refresh keys
+        system("#{Dir.pwd}/refresh-keys.sh '#{Config::NETWORK}.#{i + 1}'", out: File::NULL, err: File::NULL) or raise "Failed to execute refresh-keys.sh"
+
     end
 end

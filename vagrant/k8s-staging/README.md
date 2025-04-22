@@ -2,9 +2,7 @@
 
 This Vagrant configuration sets up a **three-node Kubernetes staging cluster** using Ubuntu 24.04 virtual machines, powered by the `vmware_desktop` provider.
 
-Each VM is provisioned with a static IP, dedicated disk, and custom compute resources — perfect for testing multi-node environments like Kubernetes.
-
-Cloud-init is used to configure provision the VMs. The intention is to not rely on Vagrant's in built mechanisms and to focus on building a realistic representation of my physical infastructure.
+Cloud-init is used to configure provision the VMs. The intention is to not rely on Vagrant's in built mechanisms and to focus on building a realistic representation of my physical infastructure. There is effort to disable some of vagrant's mechanisms as to try and more closely imitate the production environment.
 
 ---
 
@@ -68,10 +66,11 @@ Refer to this issue for a step-by-step workaround:
 [DetectionLab Issue #602](https://github.com/clong/DetectionLab/issues/602)
 
 ```bash
-sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_2_DHCP no
-sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_2_HOSTONLY_SUBNET 192.168.6.0
-sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_2_HOSTONLY_NETMASK 255.255.255.224
-sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_2_VIRTUAL_ADAPTER yes
+sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_3_DHCP no
+sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_3_NAT yes
+sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_3_HOSTONLY_SUBNET 192.168.6.0
+sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_3_HOSTONLY_NETMASK 255.255.255.224
+sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cfgcli vnetcfgadd VNET_3_VIRTUAL_ADAPTER yes
 sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --configure
 sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --stop
 sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --start
@@ -79,7 +78,18 @@ sudo /Applications/VMware\ Fusion.app/Contents/Library/vmnet-cli --start
 
 ---
 
-### 2. **Manually Start the VMware Utility**
+### 2. Network Address Reservation
+
+VMware automatically reserves specific addresses in a configured subnet:
+
+- **First Address**: Reserved for the host itself (192.168.6.1)
+- **Second Address**: Reserved for the NAT gateway (192.168.6.2)
+
+This means your VMs should use IP addresses starting from 192.168.6.3 and onwards. Be sure to account for these reservations when planning your network configuration.
+
+---
+
+### 3. **Manually Start the VMware Utility**
 
 In some environments, the **VMware Utility service** (used by Vagrant to interact with VMware) may not be running automatically.
 
@@ -93,7 +103,7 @@ If you get errors like "Unable to connect to the VMware utility", follow the off
 sudo launchctl load -w /Library/LaunchDaemons/com.vagrant.vagrant-vmware-utility.plist
 ```
 
-### 3. **Generating the `cloud-init.iso`**
+### 4. **Generating the `cloud-init.iso`**
 
 To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a simple Bash script. This ISO includes both the `user-data` and `meta-data` files, which are used by Cloud-init during the VM’s first boot to configure system settings, users, packages, and more.
 
@@ -103,7 +113,7 @@ To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a
 
 This can also be achieved at runtime by setting BUILD_ISO = true in config.rb.
 
-### 4. **macOS Networking Caveat (local network access required)
+### 5. **macOS Networking Caveat (local network access required)
 
 If you’re using macOS, you might encounter issues where VSCode or your terminal cannot SSH into the VM or access the local Vagrant network. This is due to macOS security settings that restrict local network access for apps.
 
