@@ -8,7 +8,7 @@
           address: "{{ ansible_host }}"
       discovery:
         bootstrapToken:
-          apiServerEndpoint: "{{ vip }}:443"
+          apiServerEndpoint: "{{ vip }}:{{ haproxy_port }}"
           token: "{{ hostvars[vars['init_node']]['token'].stdout }}"
           caCertHashes:
             - "sha256:{{ hostvars[vars['init_node']]['ca_hash'].stdout }}"

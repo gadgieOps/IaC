@@ -4,7 +4,16 @@
   become: true
   gather_facts: true
   tasks:
-    
+
+    - name: Setup initial FW Rules
+      ansible.builtin.include_tasks:
+        file: ha-k8s-tasks/gp-firewall.yml
+        apply:
+          tags: firewall, ufw
+      when:
+        - set_gp_fw | bool
+      tags: firewall, ufw
+
     - name: Includes keepalived tasks
       ansible.builtin.include_tasks:
         file: ha-k8s-tasks/keepalived.yml
@@ -22,20 +31,34 @@
     - name: Wait for API Reachability
       ansible.builtin.wait_for:
         host: "{{ vip }}"
-        port: 443
+        port: "{{ haproxy_port }}"
         delay: 2
       tags: haproxy, wait
 
-    - name: Install containerd
-      ansible.builtin.include_role:
-        name: geerlingguy.containerd
+    - name: Install Containerd
+      ansible.builtin.include_tasks:
+        file: ha-k8s-tasks/containderd.yml
         apply:
-           tags: containerd
-      tags: containerd
+          tags: containerd, cri
+      tags: containerd, cri
+
+    - name: Prepre server for Kubernetes
+      ansible.builtin.include_tasks:
+        file: ha-k8s-tasks/k8s-prep.yml
+        apply:
+          tags: k8s
+      tags: k8s
+
+    - name: Configure UFW for Kubernetes Ports
+      ansible.builtin.include_tasks:
+        file: ha-k8s-tasks/k8s-firewall.yml
+        apply:
+          tags: firewall, ufw
+      tags: firewall, ufw
 
     - name: Install Kubernetes
       ansible.builtin.include_tasks:
-        file: ha-k8s-tasks/kubernetes.yml
+        file: ha-k8s-tasks/k8s-install.yml
         apply:
           tags: k8s
       tags: k8s

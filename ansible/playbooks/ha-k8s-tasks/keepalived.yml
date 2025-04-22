@@ -1,6 +1,30 @@
 ---
+- name: Allow vrrp traffic In
+  community.general.ufw:
+    rule: allow
+    direction: in
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: vrrp
+    state: enabled
+    insert: 200
+    comment: "vrrp IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow vrrp traffic Out
+  community.general.ufw:
+    rule: allow
+    direction: out
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: vrrp
+    state: enabled
+    insert: 205
+    comment: "vrrp OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
   ###
-  # TODO: script_user root
+  # TODO: script is running as root
   #       Need to understand what this should be
 
 - name: Deploy keepalived
@@ -11,21 +35,22 @@
   vars:
     keepalived_global_defs:
       - enable_script_security
-      - script_user root
     keepalived_scripts:
       chk_haproxy:
-        check_script: "pgrep haproxy"
+        check_script: "/usr/bin/pgrep haproxy"
+        user: root
     keepalived_instances:
       vrrp:
         state: MASTER
         interface: "{{ cluster_interface }}"
         virtual_router_id: 42
-        priority: 100
+        priority: "{{ vrrp_pri }}"
         advert_int: 1
-        unicast_src_ip: "{{ ansible_host | string }}"
         authentication_password: "{{ vrrp_password }}"
         vips:
           - "{{ vip }} dev {{ cluster_interface }}"
+        unicast_src_ip: "{{ ansible_host | string }}"
+        # track_src_ip: true
         unicast_peers: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
         track_scripts:
           - chk_haproxy

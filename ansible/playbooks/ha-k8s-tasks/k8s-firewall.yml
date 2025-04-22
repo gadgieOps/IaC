@@ -1,0 +1,203 @@
+
+  ###
+  # kube-apiserver
+
+- name: Allow kube-apiserver server IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ kube_api_port }}"
+    src: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 100
+    comment: "kube-apiserver IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow kube-apiserver OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ kube_api_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 105
+    comment: "kube-apiserver OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+  ###
+  # etcd
+
+  # client
+
+- name: Allow etcd client traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ etcd_client_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 110
+    comment: "etcd-client IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow etcd client traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ etcd_client_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 115
+    comment: "etcd-client OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+  # peer
+
+- name: Allow etcd peer traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ etcd_peer_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 120
+    comment: "etcd-peer IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow etcd peer traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ etcd_peer_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 125
+    comment: "etcd-peer OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+  ###
+  # kubelet
+
+- name: Allow kubelet traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ kubelet_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 130
+    comment: "kubelet IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow kubelet API OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ kubelet_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 135
+    comment: "kubelet OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+  ###
+  # kube-scheduler
+
+- name: Allow kube-scheduler traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ kube_scheduler_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 140
+    comment: "kube-scheduler IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow kube-scheduler traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ kube_scheduler_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 145
+    comment: "kube-scheduler OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+  ###
+  # kube-controller
+
+- name: Allow kube-controller traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ kube_controller_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 150
+    comment: "kube-controller IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow kube-controller traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ kube_controller_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 155
+    comment: "kube-controller OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+  ###
+  # Calico Networking
+
+- name: Allow BGP for Calico Networking IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ calico_bgp_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 160
+    comment: "Calico BGP IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+
+- name: Allow BGP for Calico Networking OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ calico_bgp_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 165
+    comment: "Calico BGP OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"

@@ -1,0 +1,44 @@
+---
+- name: Allow SSH from local subnet
+  community.general.ufw:
+    rule: allow
+    direction: in
+    name: OpenSSH
+    src: "{{ secure_zone }}"
+    dest: "{{ ansible_host }}"
+    insert: 10
+    comment: "SSH IN from Secure Zone"
+
+- name: All DNS to Anywhere - {{ item }}
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "53"
+    src: "{{ ansible_host }}"
+    dest: "any"
+    proto: "{{ item }}"
+    insert: 15
+    comment: "DNS OUT to Anywhere"
+  loop:
+    - tcp
+    - udp
+
+- name: Allow 80 to Anywhere
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "80"
+    src: "{{ ansible_host }}"
+    dest: "any"
+    insert: 20
+    comment: "HTTP OUT to Anywhere"
+
+- name: Allow 443 to Anywhere
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "443"
+    src: "{{ ansible_host }}"
+    dest: "any"
+    insert: 25
+    comment: "HTTPS OUT to Anywhere"

@@ -1,0 +1,35 @@
+---
+###
+# Network
+secure_zone: "192.168.6.1/32" # Who can access the API server
+
+###
+# Kubernetes
+kubernetes_version: "1.32"
+cluster_name: "kubernetes"
+cluster_domain: cluster.local
+# Ports
+kube_api_port: "6443"
+etcd_client_port: "2379"
+etcd_peer_port: "2380"
+kubelet_port: "10250"
+kube_scheduler_port: "10259"
+kube_controller_port: "10257"
+# CNI
+k8s_cni: "calico"
+calico_bgp_port: "179"
+pod_network: "10.244.0.0/16"
+
+# ha-proxy
+haproxy_port: "443"
+
+###
+# Keepalived
+vip: 192.168.6.6
+vrrp_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35626639333532623761383031633562326531313537373736353233333839306138393063363930
+          3961643539623561623466633964313439656431383531320a353865333233626166393963303664
+          39626132396665353766633233623033633262626166346365656537663033633933346134616164
+          3430303338356632630a313536393766663339613639323366646366323939663034623536666134
+          3434

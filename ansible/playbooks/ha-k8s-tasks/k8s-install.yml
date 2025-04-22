@@ -1,0 +1,62 @@
+---
+- name: Set init_node to 'control_plane' for geerlingguy.kubernetes
+  ansible.builtin.set_fact:
+    kubernetes_role: "control_plane"
+  when: inventory_hostname == init_node
+
+- name: Set non lead controllers to "null" to skip initialization in geerlingguy.kubernetes
+  ansible.builtin.set_fact:
+    kubernetes_role: null
+  when: inventory_hostname != init_node
+
+- name: Install Kubernetes and intialise cluster
+  ansible.builtin.include_role:
+    name: geerlingguy.kubernetes
+    apply:
+      tags: k8s
+  vars:
+    kubernetes_version: "{{ kubernetes_version }}"
+    kubernetes_config_init_configuration:
+      localAPIEndpoint:
+        advertiseAddress: "{{ ansible_host }}"
+      nodeRegistration:
+        name: "{{ ansible_hostname }}"
+        kubeletExtraArgs:
+          address: "{{ ansible_host }}"
+    kubernetes_kubeadm_init_extra_opts: "--upload-certs"
+    kubernetes_config_cluster_configuration:
+      networking:
+        podSubnet: "{{ pod_network }}"
+      controlPlaneEndpoint: "{{ vip }}:{{ haproxy_port }}"
+      apiServer:
+        certSans:
+          - "{{ vip }}"
+          - "{{ ansible_host }}"
+    clusterName: "{{ cluster_name }}"
+    kubernetes_config_kubelet_configuration:
+      cgroupDriver: "systemd"
+      address: "{{ ansible_host }}"
+      clusterDomain: "{{ cluster_domain }}"
+      serializeImagePulls: false
+      MemorySwapConfiguration:
+        swapBehavior: "LimitedSwap"
+    kubernetes_pod_network:
+      cni: "{{ k8s_cni }}"
+      cidr: "{{ pod_network }}"
+
+- name: Hold kubernetes packages
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubeadm
+    - kubelet
+    - kubectl
+
+- name: Generate join credentials
+  ansible.builtin.include_tasks: join-credentials.yml
+  when: inventory_hostname == init_node
+
+- name: Deploy remaining nodes
+  ansible.builtin.include_tasks: join-cluster.yml
+  when: inventory_hostname != init_node

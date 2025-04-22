@@ -48,11 +48,9 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
                     vm.vmx["sata0:1.filename"] = Config::CLOUD_INIT_ISO
                     vm.vmx["sata0:1.startConnected"] = "TRUE"
                 end
-
             end
         end
         # Refresh keys
         system("#{Dir.pwd}/refresh-keys.sh '#{Config::NETWORK}.#{i + 1}'", out: File::NULL, err: File::NULL) or raise "Failed to execute refresh-keys.sh"
-
     end
 end
