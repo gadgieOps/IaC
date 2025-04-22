@@ -62,6 +62,5 @@ runcmd:
   - userdel -r vagrant || true
   - rm /etc/netplan/01-netcfg.yaml || true
   - rm /etc/netplan/50-cloud-init.yaml || true
-  - chmod 600 /etc/netplan/50-vagrant.yaml || true
   - mv /root/99-network.yaml /etc/netplan/99-network.yaml || true
   - netplan apply || true
