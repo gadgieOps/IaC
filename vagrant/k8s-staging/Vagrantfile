@@ -27,14 +27,20 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
     config.vm.allow_fstab_modification = Config::ALLOW_FSTAB_MODIFICATION
 
     # SSH Config
+    config.ssh.username = Config::SSH_USERNAME
+    config.ssh.private_key_path = Config::SSH_PRIVATE_KEY_PATH
+    config.ssh.port = Config::SSH_PORT
+    config.ssh.guest_port = Config::SSH_GUEST_PORT
+    config.ssh.forward_agent = Config::SSH_FORWARD_AGENT
+    config.ssh.connect_timeout = Config::SSH_CONNECT_TIMEOUT
     config.ssh.insert_key = Config::SSH_INSERT_KEY
     config.ssh.key_type = Config::SSH_KEY_TYPE
 
     (1..Config::NODES).each do |i|
         config.vm.define "#{Config::HOSTNAME_BASE}-0#{i}" do |vm_config|
 
+            config.ssh.host = "#{Config::NETWORK}.#{i + 2}"
             vm_config.vm.hostname = "#{Config::HOSTNAME_BASE}-0#{i}"
-
             vm_config.vm.network "private_network", ip: "#{Config::NETWORK}.#{i + 2}"
 
             vm_config.vm.provider Config::PROVIDER do |vm|

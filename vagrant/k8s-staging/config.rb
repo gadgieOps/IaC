@@ -20,6 +20,12 @@ module Config
     BUILD_ISO = true
 
     # SSH Configuration
+    SSH_USERNAME = "gadge"
+    SSH_PRIVATE_KEY_PATH = "#{Dir.home}/.ssh/gadge"
+    SSH_PORT = 22
+    SSH_GUEST_PORT = 22
+    SSH_FORWARD_AGENT = false
+    SSH_CONNECT_TIMEOUT = 30
     SSH_INSERT_KEY = false
     SSH_KEY_TYPE = "ed25519"
   
@@ -57,6 +63,14 @@ module Config
         errors << "NODES must be an odd number"
       end
 
+      errors << "SSH_USERNAME must be a non-empty String" unless SSH_USERNAME.is_a?(String) && !SSH_USERNAME.empty?
+      errors << "SSH_PRIVATE_KEY_PATH must be a non-empty String" unless SSH_PRIVATE_KEY_PATH.is_a?(String) && !SSH_PRIVATE_KEY_PATH.empty?
+      errors << "SSH_PORT must be an Integer between 1 and 65535" unless SSH_PORT.is_a?(Integer) && SSH_PORT.between?(1, 65535)
+      errors << "SSH_GUEST_PORT must be an Integer between 1 and 65535" unless SSH_GUEST_PORT.is_a?(Integer) && SSH_GUEST_PORT.between?(1, 65535)
+      errors << "SSH_FORWARD_AGENT must be true or false" unless [true, false].include?(SSH_FORWARD_AGENT)
+      errors << "SSH_CONNECT_TIMEOUT must be a positive Integer" unless SSH_CONNECT_TIMEOUT.is_a?(Integer) && SSH_CONNECT_TIMEOUT > 0
+      errors << "SSH_INSERT_KEY must be true or false" unless [true, false].include?(SSH_INSERT_KEY)
+      
       valid_key_types = ["auto", "rsa", "dsa", "ecdsa", "ecdsa521", "ed25519"]
       errors << "SSH_KEY_TYPE must be one of #{valid_key_types.join(', ')}" unless valid_key_types.include?(SSH_KEY_TYPE)
       
