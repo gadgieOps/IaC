@@ -11,7 +11,8 @@
         apply:
           tags: firewall, ufw
       when:
-        - set_gp_fw | bool
+        - set_gp_fw | default(false) | bool
+        - setup_ufw | default(false) | bool
       tags: firewall, ufw
 
     - name: Includes keepalived tasks
@@ -23,7 +24,7 @@
 
     - name: Includes haproxy tasks
       ansible.builtin.include_tasks:
-        file: ha-k8s-tasks/haproxy.yml
+        file: shared-k8s-tasks/haproxy.yml
         apply:
           tags: haproxy
       tags: haproxy
@@ -51,9 +52,11 @@
 
     - name: Configure UFW for Kubernetes Ports
       ansible.builtin.include_tasks:
-        file: ha-k8s-tasks/k8s-firewall.yml
+        file: shared-k8s-tasks/k8s-firewall.yml
         apply:
           tags: firewall, ufw
+      when:
+        - setup_ufw | default(false) | bool
       tags: firewall, ufw
 
     - name: Install Kubernetes

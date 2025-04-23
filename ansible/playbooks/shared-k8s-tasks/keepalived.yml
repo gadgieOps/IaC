@@ -7,9 +7,11 @@
     dest: "{{ ansible_host }}"
     proto: vrrp
     state: enabled
-    insert: 200
+    insert: 0
+    insert_relative_to: first-ipv4
     comment: "vrrp IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  when: setup_ufw | default(false) | bool
 
 - name: Allow vrrp traffic Out
   community.general.ufw:
@@ -19,9 +21,11 @@
     dest: "{{ item }}"
     proto: vrrp
     state: enabled
-    insert: 205
+    insert: 0
+    insert_relative_to: first-ipv4
     comment: "vrrp OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  when: setup_ufw | default(false) | bool
 
   ###
   # TODO: script is running as root

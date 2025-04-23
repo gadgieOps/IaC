@@ -1,0 +1,74 @@
+---
+
+- name: Include shared firewall rules
+  ansible.builtin.include_tasks:
+    file: shared-k8s-tasks/firewall.yml
+    apply:
+      tags: firewall, ufw
+  tags: firewall, ufw
+
+  ###
+  # kubelet
+
+- name: Allow kubelet metrics traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ kubelet_metrics_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "kubelet metrics IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow kubelet metrics API OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ kubelet_metrics_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "kubelet metrics OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+  ###
+  # Flannel Networking
+
+- name: Allow VxLAN traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ flannel_vxlan_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "flannel vxlan IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow VxLAN traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ flannel_vxlan_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "flannel vxlan OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw

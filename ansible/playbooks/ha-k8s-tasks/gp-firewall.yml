@@ -6,7 +6,8 @@
     name: OpenSSH
     src: "{{ secure_zone }}"
     dest: "{{ ansible_host }}"
-    insert: 10
+    insert: 0
+    insert_relative_to: first-ipv4
     comment: "SSH IN from Secure Zone"
 
 - name: All DNS to Anywhere - {{ item }}
@@ -17,7 +18,8 @@
     src: "{{ ansible_host }}"
     dest: "any"
     proto: "{{ item }}"
-    insert: 15
+    insert: 0
+    insert_relative_to: last-ipv4
     comment: "DNS OUT to Anywhere"
   loop:
     - tcp
@@ -30,7 +32,8 @@
     port: "80"
     src: "{{ ansible_host }}"
     dest: "any"
-    insert: 20
+    insert: 0
+    insert_relative_to: last-ipv4
     comment: "HTTP OUT to Anywhere"
 
 - name: Allow 443 to Anywhere
@@ -40,5 +43,6 @@
     port: "443"
     src: "{{ ansible_host }}"
     dest: "any"
-    insert: 25
+    insert: 0
+    insert_relative_to: last-ipv4
     comment: "HTTPS OUT to Anywhere"

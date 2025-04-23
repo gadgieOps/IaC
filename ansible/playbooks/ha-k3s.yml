@@ -1,0 +1,25 @@
+---
+- name: Deploy k3s
+  hosts: all
+  gather_facts: true
+  become: true
+  pre_tasks:
+    - name: Include keepalived tasks
+      ansible.builtin.include_tasks:
+        file: shared-k8s-tasks/keepalived.yml
+      tags: vrrp
+    - name: Include HAProxy tasks
+      ansible.builtin.include_tasks:
+        file: shared-k8s-tasks/haproxy.yml
+      tags: haproxy
+    - name: Setup k3s firewall rules
+      ansible.builtin.include_tasks:
+        file: ha-k3s-tasks/k3s-firewall.yml
+      when:
+        - setup_ufw | default(false) | bool
+      tags: firewall, ufw
+  roles:
+    - role: k3s.orchestration.prereq
+    - role: k3s.orchestration.airgap
+    - role: k3s.orchestration.raspberrypi
+    - role: k3s.orchestration.k3s_server

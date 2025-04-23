@@ -1,3 +1,9 @@
+collections:
+  - name: k3s.k3s
+    source: https://github.com/k3s-io/k3s-ansible.git
+    version: "1.0.0"
+    type: git
+
 roles:
 # Latest tested commit on devel branch 21.04.2025
 # Release 1.0.1 didn't have code to fetch pre/post audit files

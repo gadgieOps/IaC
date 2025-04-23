@@ -7,8 +7,10 @@
     dest: "{{ ansible_host }}"
     proto: tcp
     state: enabled
-    insert: 210
+    insert: 0
+    insert_relative_to: first-ipv4
     comment: "public kube-apiserver IN"
+  when: setup_ufw | default(false) | bool
   tags: firewall, ufw, haproxy
 
 - name: Deploy HAProxy
@@ -19,7 +21,7 @@
   vars:
     haproxy_frontends:
       - name: k8s-api
-        address: "{{ ansible_host}}"
+        address: "{{ ansible_host }}"
         port: "{{ haproxy_port }}"
         default_backend: k8s-api
         mode: tcp
@@ -37,7 +39,7 @@
             address: "{{ hostvars['k8s_staging_02']['ansible_host'] }}"
           - name: k8s-staging-03
             address: "{{ hostvars['k8s_staging_03']['ansible_host'] }}"
-        port: "{{ kube_api_port}}"
+        port: "{{ kube_api_port }}"
         options:
           - check
           - check-ssl

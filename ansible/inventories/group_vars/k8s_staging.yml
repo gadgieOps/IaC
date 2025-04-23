@@ -2,6 +2,7 @@
 ###
 # Network
 secure_zone: "192.168.6.1/32" # Who can access the API server
+setup_ufw: true
 
 ###
 # Kubernetes
@@ -21,11 +22,12 @@ calico_bgp_port: "179"
 pod_network: "10.244.0.0/16"
 
 # ha-proxy
-haproxy_port: "443"
+haproxy_port: 443
 
 ###
 # Keepalived
 vip: 192.168.6.6
+cluster_interface: eth1
 vrrp_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           35626639333532623761383031633562326531313537373736353233333839306138393063363930
