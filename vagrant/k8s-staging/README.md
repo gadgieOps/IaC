@@ -126,3 +126,20 @@ If you’re using macOS, you might encounter issues where VSCode or your termina
     - Your preferred Terminal app (e.g., **Terminal**, **iTerm2**)
 
 Without this, tools like vagrant ssh may hang or fail due to blocked network permissions.
+
+### 6. **Refreshing SSH Keys with `refresh-keys.sh`**
+
+The `refresh-keys.sh` script provides a convenient way to manage SSH known hosts when recreating VMs with the same IP addresses.
+
+```bash
+./refresh-keys.sh <ip_address>
+```
+
+This script:
+
+- Removes the specified IP address from your `~/.ssh/known_hosts` file
+- Clears any cached SSH keys for that host
+- Prevents "Host key verification failed" errors when connecting to rebuilt VMs
+- If an IP Address is not provided, it simply clears and scans the three IP's assigned to the nodes
+
+Run this script after destroying and recreating the cluster to ensure smooth SSH connections to the kubernetes nodes.
