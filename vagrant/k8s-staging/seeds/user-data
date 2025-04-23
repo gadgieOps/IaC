@@ -60,6 +60,7 @@ write_files:
 
 runcmd:
   - userdel -r vagrant || true
+  - touch /etc/cloud/cloud-init.disabled || true
   - rm /etc/netplan/01-netcfg.yaml || true
   - rm /etc/netplan/50-cloud-init.yaml || true
   - mv /root/99-network.yaml /etc/netplan/99-network.yaml || true
