@@ -1,0 +1,13 @@
+---
+- name: Shutdown all hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Shutdown the server
+      community.general.shutdown:
+        msg: "Shutting down initiated by Ansible"
+      register: shutdown_result
+
+    - name: Display shutdown status
+      ansible.builtin.debug:
+        msg: "Shutdown command sent to {{ inventory_hostname }}. Result: {{ shutdown_result.stderr if shutdown_result.stderr is defined else 'Success' }}"
