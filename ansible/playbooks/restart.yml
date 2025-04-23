@@ -3,7 +3,6 @@
   hosts: all
   become: true
   gather_facts: false
-
   tasks:
     - name: Restart system
       ansible.builtin.reboot:
