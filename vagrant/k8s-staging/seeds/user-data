@@ -63,5 +63,6 @@ runcmd:
   - touch /etc/cloud/cloud-init.disabled || true
   - rm /etc/netplan/01-netcfg.yaml || true
   - rm /etc/netplan/50-cloud-init.yaml || true
+  - chmod 400 /root/50-vagrant.yml || true
   - mv /root/99-network.yaml /etc/netplan/99-network.yaml || true
   - netplan apply || true
