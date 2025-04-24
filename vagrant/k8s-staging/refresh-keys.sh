@@ -10,21 +10,30 @@ HOSTS=(
     "192.168.6.5"
 )
 
+# Colors and formatting
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
 function refresh_host() {
     local HOST=$1
-    echo "Processing $HOST..."
+    echo -e "${BLUE}${BOLD}⚙️  Processing ${YELLOW}$HOST${BLUE}...${RESET}"
     
     ssh-keygen -R "$HOST" 2>/dev/null
     ssh-keyscan -H "$HOST" >> "$KNOWN_HOSTS_FILE"
 
     if [ $? -eq 0 ]; then
-        echo "✅ Successfully refreshed keys for $HOST"
+        echo -e "${GREEN}${BOLD}✅ Successfully refreshed keys for ${YELLOW}$HOST${RESET}"
     else
-        echo "❌ Failed to refresh keys for $HOST"
+        echo -e "${RED}${BOLD}❌ Failed to refresh keys for ${YELLOW}$HOST${RESET}"
     fi
+    echo ""
 }
 
-echo "Refreshing SSH known hosts entries for Vagrant VMs..."
+echo -e "\n${BOLD}${BLUE}🔄 Refreshing SSH known hosts entries for Vagrant VMs...${RESET}\n"
 
 # Check if an argument was provided
 if [ $# -eq 1 ]; then
@@ -37,4 +46,4 @@ else
     done
 fi
 
-echo "SSH known hosts refresh complete!"
+echo -e "${GREEN}${BOLD}🎉 SSH known hosts refresh complete! 🚀${RESET}\n"
