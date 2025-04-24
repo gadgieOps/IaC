@@ -135,6 +135,7 @@ terraform.rc
 ##########################
 
 **/.vagrant/*
+vagrant/k8s-staging/seeds/user-data
 
 ##########################
 #         VS Code        #
