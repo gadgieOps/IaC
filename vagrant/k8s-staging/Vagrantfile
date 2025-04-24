@@ -12,12 +12,6 @@ begin
     exit 1
   end
 
-# Build the cloud-init ISO if specified
-if Config::BUILD_ISO
-    script_path = "#{Dir.pwd}/build-iso.sh"
-    system("bash", script_path, out: File::NULL, err: File::NULL) or raise "Failed to execute build-iso.sh"
-end
-
 Vagrant.require_version Config::VAGRANT_VERSION
 Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
 
@@ -37,12 +31,33 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
     config.ssh.key_type = Config::SSH_KEY_TYPE
 
     (1..Config::NODES).each do |i|
-        config.vm.define "#{Config::HOSTNAME_BASE}-0#{i}" do |vm_config|
 
-            config.ssh.host = "#{Config::NETWORK}.#{i + 2}"
-            vm_config.vm.hostname = "#{Config::HOSTNAME_BASE}-0#{i}"
-            vm_config.vm.network "private_network", ip: "#{Config::NETWORK}.#{i + 2}"
+        ip = "#{Config::NETWORK}.#{i + 2}"
+        name = "#{Config::HOSTNAME_BASE}-0#{i}"
 
+        # Build the cloud-init ISO before a vagrant up
+        config.trigger.before :up do |t|
+            t.ruby do
+                # Build the cloud-init ISO if specified
+                if Config::BUILD_ISO
+                    script = "#{Dir.pwd}/build-iso.sh"
+                    system("bash", script, "#{i}") or raise "Failed to execute build-iso.sh"
+                end
+              end
+        end
+
+        # Refresh keys as part of the provisioning process
+        config.trigger.after :up do |t|
+            t.ruby do
+                system("#{Dir.pwd}/refresh-keys.sh '#{ip}'") or raise "Failed to execute refresh-keys.sh"
+            end
+        end
+
+        config.vm.define name do |vm_config|
+
+            vm_config.ssh.host = ip
+            vm_config.vm.hostname = name
+            vm_config.vm.network "private_network"
             vm_config.vm.provider Config::PROVIDER do |vm|
 
                 vm.gui = Config::GUI
@@ -52,12 +67,10 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
 
                 if Config::BASE_IMAGE
                     vm.vmx["sata0:1.deviceType"] = "cdrom-image"
-                    vm.vmx["sata0:1.filename"] = Config::CLOUD_INIT_ISO
+                    vm.vmx["sata0:1.filename"] = "#{Dir.pwd}/seeds/cloud-init-0#{i}.iso"
                     vm.vmx["sata0:1.startConnected"] = "TRUE"
                 end
             end
         end
-        # Refresh keys
-        system("#{Dir.pwd}/refresh-keys.sh '#{Config::NETWORK}.#{i + 2}'", out: File::NULL, err: File::NULL) or raise "Failed to execute refresh-keys.sh"
     end
 end

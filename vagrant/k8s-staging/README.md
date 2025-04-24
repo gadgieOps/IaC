@@ -39,7 +39,7 @@ vagrant up
 ### SSH into a node
 
 ```bash
-ssh -l gadge -i <key path> <node ip>
+vagrant ssh <hostname>
 ```
 
 ### Shut down the cluster
@@ -103,17 +103,7 @@ If you get errors like "Unable to connect to the VMware utility", follow the off
 sudo launchctl load -w /Library/LaunchDaemons/com.vagrant.vagrant-vmware-utility.plist
 ```
 
-### 4. **Generating the `cloud-init.iso`**
-
-To provision the VMs using **Cloud-init**, a `cloud-init.iso` is created using a simple Bash script. This ISO includes both the `user-data` and `meta-data` files, which are used by Cloud-init during the VM’s first boot to configure system settings, users, packages, and more.
-
-```bash
-./build-iso.sh
-```
-
-This can also be achieved at runtime by setting BUILD_ISO = true in config.rb.
-
-### 5. **macOS Networking Caveat (local network access required)
+### 4. **macOS Networking Caveat (local network access required)
 
 If you’re using macOS, you might encounter issues where VSCode or your terminal cannot SSH into the VM or access the local Vagrant network. This is due to macOS security settings that restrict local network access for apps.
 
@@ -127,7 +117,7 @@ If you’re using macOS, you might encounter issues where VSCode or your termina
 
 Without this, tools like vagrant ssh may hang or fail due to blocked network permissions.
 
-### 6. **Refreshing SSH Keys with `refresh-keys.sh`**
+### 5. **Refreshing SSH Keys with `refresh-keys.sh`**
 
 The `refresh-keys.sh` script provides a convenient way to manage SSH known hosts when recreating VMs with the same IP addresses.
 
@@ -142,4 +132,25 @@ This script:
 - Prevents "Host key verification failed" errors when connecting to rebuilt VMs
 - If an IP Address is not provided, it simply clears and scans the three IP's assigned to the nodes
 
-Run this script after destroying and recreating the cluster to ensure smooth SSH connections to the kubernetes nodes.
+This script is a part of the Vagrantfile and run on every vagrant command.
+
+### 6. **Disabled Vagrant Public Network**
+
+This configuration intentionally **disables Vagrant's default public network** mechanism in favor of a custom private network setup. This decision was made to:
+
+- More accurately simulate the production environment
+- Provide greater control over network configuration
+- Avoid potential conflicts with Vagrant's automatic networking
+
+### Dynamic Cloud-Init Configuration
+
+Instead of relying on Vagrant's networking:
+
+1. **Custom cloud-init ISOs** are generated at runtime for each VM
+2. Each ISO contains host-specific configuration including:
+
+    - Assigned private IP address (from the 192.168.6.x/27 range)
+    - Network interface configuration
+    - SSH keys and authentication settings
+
+This approach ensures each VM has a consistent, predictable network identity while still maintaining isolation from the host's primary network. The generated cloud-init configurations closely mirror those used in the production environment, providing a more accurate staging representation.
