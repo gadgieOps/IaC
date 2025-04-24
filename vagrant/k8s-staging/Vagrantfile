@@ -57,7 +57,7 @@ Vagrant.configure(Config::VAGRANT_CONFIG_VERSION) do |config|
 
             vm_config.ssh.host = ip
             vm_config.vm.hostname = name
-            vm_config.vm.network "private_network"
+            vm_config.vm.network "private_network", ip: ip
             vm_config.vm.provider Config::PROVIDER do |vm|
 
                 vm.gui = Config::GUI
