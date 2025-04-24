@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Define colors and formatting
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
+GREEN='\033[38;5;108m'
+BLUE='\033[38;5;67m'
+YELLOW='\033[38;5;180m'
 BOLD='\033[1m'
 RESET='\033[0m'
 

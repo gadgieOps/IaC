@@ -10,11 +10,10 @@ HOSTS=(
     "192.168.6.5"
 )
 
-# Colors and formatting
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
+GREEN='\033[38;5;108m'
+RED='\033[38;5;203m'
+YELLOW='\033[38;5;214m'
+BLUE='\033[38;5;67m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
