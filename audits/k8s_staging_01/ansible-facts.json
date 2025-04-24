@@ -15,11 +15,11 @@
     "bios_version": "VMW201.00V.24006586.BA64.2406042154",
     "board_asset_tag": "NA",
     "board_name": "VBSA",
-    "board_serial": "AAF22A782B724D56",
+    "board_serial": "6B66ABC71F2A4D56",
     "board_vendor": "VMware, Inc.",
     "board_version": "1",
     "chassis_asset_tag": "NA",
-    "chassis_serial": "AAF22A782B724D56",
+    "chassis_serial": "6B66ABC71F2A4D56",
     "chassis_vendor": "VMware, Inc.",
     "chassis_version": "VMware20,1",
     "cmdline": {
@@ -32,24 +32,24 @@
         "root": "/dev/mapper/ubuntu--vg-ubuntu--lv"
     },
     "date_time": {
-        "date": "2025-04-23",
-        "day": "23",
-        "epoch": "1745441176",
-        "epoch_int": "1745441176",
-        "hour": "20",
-        "iso8601": "2025-04-23T20:46:16Z",
-        "iso8601_basic": "20250423T204616617047",
-        "iso8601_basic_short": "20250423T204616",
-        "iso8601_micro": "2025-04-23T20:46:16.617047Z",
-        "minute": "46",
+        "date": "2025-04-24",
+        "day": "24",
+        "epoch": "1745535802",
+        "epoch_int": "1745535802",
+        "hour": "23",
+        "iso8601": "2025-04-24T23:03:22Z",
+        "iso8601_basic": "20250424T230322371605",
+        "iso8601_basic_short": "20250424T230322",
+        "iso8601_micro": "2025-04-24T23:03:22.371605Z",
+        "minute": "03",
         "month": "04",
-        "second": "16",
-        "time": "20:46:16",
+        "second": "22",
+        "time": "23:03:22",
         "tz": "UTC",
         "tz_dst": "UTC",
         "tz_offset": "+0000",
-        "weekday": "Wednesday",
-        "weekday_number": "3",
+        "weekday": "Thursday",
+        "weekday_number": "4",
         "weeknumber": "16",
         "year": "2025"
     },
@@ -59,7 +59,7 @@
         "broadcast": "192.168.6.31",
         "gateway": "192.168.6.2",
         "interface": "eth1",
-        "macaddress": "00:0c:29:cb:3d:96",
+        "macaddress": "00:0c:29:dd:ab:64",
         "mtu": 1500,
         "netmask": "255.255.255.224",
         "network": "192.168.6.0",
@@ -131,7 +131,7 @@
                 "a39480e4-c308-4e37-b59c-aa3ee4b57308"
             ],
             "sr0": [
-                "2025-04-23-21-42-28-05"
+                "2025-04-24-23-52-15-48"
             ]
         }
     },
@@ -466,7 +466,7 @@
                 ],
                 "masters": [],
                 "uuids": [
-                    "2025-04-23-21-42-28-05"
+                    "2025-04-24-23-52-15-48"
                 ]
             },
             "model": "VMware SATA CD01",
@@ -476,9 +476,9 @@
             "sas_address": null,
             "sas_device_handle": null,
             "scheduler_mode": "mq-deadline",
-            "sectors": 183,
+            "sectors": 184,
             "sectorsize": "2048",
-            "size": "366.00 KB",
+            "size": "368.00 KB",
             "support_discard": "0",
             "vendor": "NECVMWar",
             "virtual": 1
@@ -514,7 +514,7 @@
         "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
         "PWD": "/home/ansible",
         "SHELL": "/bin/bash",
-        "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-tlnkdykbjidbxnrghitctzajqdtxecfc ; /usr/bin/python3.12 /home/ansible/.ansible/tmp/ansible-tmp-1745441175.918859-56146-151611842454510/AnsiballZ_setup.py",
+        "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-iprjzvuqctgghybkhlgmchrlieyrnjgb ; /usr/bin/python3.12 /home/ansible/.ansible/tmp/ansible-tmp-1745535801.623174-21256-39452021992789/AnsiballZ_setup.py",
         "SUDO_GID": "1002",
         "SUDO_UID": "1002",
         "SUDO_USER": "ansible",
@@ -592,7 +592,7 @@
             "vlan_challenged": "off [fixed]"
         },
         "hw_timestamp_filters": [],
-        "macaddress": "00:0c:29:cb:3d:8c",
+        "macaddress": "00:0c:29:dd:ab:5a",
         "module": "e1000e",
         "mtu": 1500,
         "pciid": "0000:02:00.0",
@@ -689,7 +689,7 @@
                 "prefix": "27"
             }
         ],
-        "macaddress": "00:0c:29:cb:3d:96",
+        "macaddress": "00:0c:29:dd:ab:64",
         "module": "e1000e",
         "mtu": 1500,
         "pciid": "0000:12:00.0",
@@ -709,8 +709,8 @@
     "hostname": "k8s-staging-01",
     "hostnqn": "",
     "interfaces": [
-        "eth1",
         "lo",
+        "eth1",
         "eth0"
     ],
     "is_chroot": false,
@@ -808,9 +808,9 @@
         "type": "loopback"
     },
     "loadavg": {
-        "15m": 0.0087890625,
-        "1m": 0.11328125,
-        "5m": 0.029296875
+        "15m": 0.0,
+        "1m": 0.01220703125,
+        "5m": 0.0068359375
     },
     "locally_reachable_ips": {
         "ipv4": [
@@ -853,17 +853,17 @@
         }
     },
     "machine": "aarch64",
-    "machine_id": "567e762607cb4081b5cf3f3e85c7c0c2",
-    "memfree_mb": 3472,
+    "machine_id": "c62729afa8954a529040c1361b8f1f38",
+    "memfree_mb": 3471,
     "memory_mb": {
         "nocache": {
-            "free": 3681,
-            "used": 221
+            "free": 3680,
+            "used": 222
         },
         "real": {
-            "free": 3472,
+            "free": 3471,
             "total": 3902,
-            "used": 430
+            "used": 431
         },
         "swap": {
             "cached": 0,
@@ -876,28 +876,28 @@
     "module_setup": true,
     "mounts": [
         {
-            "block_available": 5777404,
+            "block_available": 5779554,
             "block_size": 4096,
             "block_total": 7817692,
-            "block_used": 2040288,
+            "block_used": 2038138,
             "device": "/dev/mapper/ubuntu--vg-ubuntu--lv",
             "dump": 0,
             "fstype": "ext4",
-            "inode_available": 1937475,
+            "inode_available": 1937480,
             "inode_total": 1998848,
-            "inode_used": 61373,
+            "inode_used": 61368,
             "mount": "/",
             "options": "rw,relatime",
             "passno": 0,
-            "size_available": 23664246784,
+            "size_available": 23673053184,
             "size_total": 32021266432,
             "uuid": "bd4f140c-392d-4b19-9911-ee6f9830967b"
         },
         {
-            "block_available": 425761,
+            "block_available": 425762,
             "block_size": 4096,
             "block_total": 498138,
-            "block_used": 72377,
+            "block_used": 72376,
             "device": "/dev/sda2",
             "dump": 0,
             "fstype": "ext4",
@@ -907,7 +907,7 @@
             "mount": "/boot",
             "options": "rw,relatime",
             "passno": 0,
-            "size_available": 1743917056,
+            "size_available": 1743921152,
             "size_total": 2040373248,
             "uuid": "a39480e4-c308-4e37-b59c-aa3ee4b57308"
         },
@@ -952,8 +952,8 @@
     "processor_threads_per_core": 1,
     "processor_vcpus": 2,
     "product_name": "VMware20,1",
-    "product_serial": "AAF22A782B724D56",
-    "product_uuid": "2b724d56-2a78-aaf2-c043-a2ef65cb3d8c",
+    "product_serial": "6B66ABC71F2A4D56",
+    "product_uuid": "1f2a4d56-abc7-6b66-13cf-0f482fddab5a",
     "product_version": "1",
     "python": {
         "executable": "/usr/bin/python3.12",
@@ -982,11 +982,11 @@
     },
     "selinux_python_present": true,
     "service_mgr": "systemd",
-    "ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKMTolsRhOYwVLwTztCrdhgdgUI2E1Ls4OIoMXUjgYnv0hTg2BpcWeQR7OwK/adHBny3A09qRFct9Ra/XExrkYg=",
+    "ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBJsBUJ2i6C0mgmjMB+8lndiClsJQv7EWfPn0IWTx1vGFbaDWp6P5mSxxHdDMdF3xLmkdr4lG7AJo3uMSjfj+wKw=",
     "ssh_host_key_ecdsa_public_keytype": "ecdsa-sha2-nistp256",
-    "ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAIHdFP2vVOF4w0R0+06rTm+1nQWY+RV/I1m7yH2lGbcHH",
+    "ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAIBODHRw8PDMHZH7o3kSSobhZOHhZsDrR9nqOwY/Z64Me",
     "ssh_host_key_ed25519_public_keytype": "ssh-ed25519",
-    "ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABgQC1RIwire7+mL3zRhFYi2WPjkXQ7qCPmZZ4rON1vx2hTyrsNr30bPotHqcxFoFpBaajnAeEB+K6wUFOcheUpZvNcHWhshHwKlmHi0ZeFVKWdXWWW7gb5Hep66J6UIbpZfUaMQq6dFa2uFICIL5SJiWQilUFzg2z1eQXV1UUJ2cu1gNam2VhaAKPBjUxwVvzpJd5naZlPt2cRYMXAhnqkIZpc9r1RRKp3WwwxNt/M8NPehCI4SjMorKsY2kbey7XKieBJjkiyTUiuJDCaUdpAueSCFqjY3FXj3AMMN0XIoXGV5JLveXVKyNY49HgLAy7nQ4L7KNLIwTphVwz5rQrdg9xkah5CsrV+Df8wzLHxDH/MmgLdo/aU/RhFRK1yvJkTcrukbNcJjYGEH1Ycy6dVSmWOj0emePiOtXCUPk6IFsfcG8W8KISAJRBMZGtdn/CXkYs6q7ofFvOgzE8pyJX4b97ocG5iFliFejY55rqIrNQfHGZoJMAMdn6O9OGW+cKKdU=",
+    "ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABgQC3lrQ6P4S8hX10bsL8U/S1ilu9fr6ggUBfFiOYlm0BUz8o/qecfeFazt4EKHJhJObrhqjiEjUIx3EuJogs9XEZNpgGgnH9tO6QW1yLVTYsdmKqnKpCD9//YWBYm/YwUzVgT+L769hJ547Fv+OFKrHkPtKOBfseqzv5k40Pdx5KHpBJJhtCqKKnswstkmRU0tnW3VDJU8AXG8xeksRXf4UYhFNmBv9m0wkCOjAwLc7KbNQTeqBI0BUTkkL7WrP7+SqjKOMoBUrXYY0hzAXwsmRFn41crW6iTiGQc7iCbNPCx3eh+qt0AXLDkl33OoWemNpUzJFC9ZxB6oT/snsm11DepKdrzfO5ZoohCjDtqV76cAeCfhqDPYbcKG9F6tsLTssL5rlRLPZRZplnpkW5unrTgTUpdoWEbcDwBo0Gir6ixdjFsdV35hMV9mTg6q1aUWKY07g6PSd1tWAmIlTZm1sRt5Mm+aSbNvx5sTAlAsSlf4sikWI3fjz7upD+6s9SlMU=",
     "ssh_host_key_rsa_public_keytype": "ssh-rsa",
     "swapfree_mb": 3902,
     "swaptotal_mb": 3902,
@@ -998,7 +998,7 @@
         "features": "+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified",
         "version": 255
     },
-    "uptime_seconds": 121,
+    "uptime_seconds": 140,
     "user_dir": "/root",
     "user_gecos": "root",
     "user_gid": 0,
