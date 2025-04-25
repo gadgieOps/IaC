@@ -22,8 +22,13 @@ chpasswd:
     root: $6$uVyBxMkM$4hogyn2yb.88GDcOycWIFhyiD3yhKRCg/IJL2dSxxtCEvjj/MosMCiQblrz8jCECoSczIJQzO/wVOczWegoq4/
   expire: False
 
-timezone: UTC
 ssh_pwauth: false
+
+timezone: UTC
+ntp:
+  enabled: true
+  servers:
+    time.euro.apple.com
 
 package_update: true
 package_upgrade: true
