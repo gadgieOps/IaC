@@ -15,7 +15,6 @@
     insert_relative_to: first-ipv4
     comment: "kube-apiserver IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
 - name: Allow direct kube-apiserver access OUT
   community.general.ufw:
@@ -30,7 +29,6 @@
     insert_relative_to: first-ipv4
     comment: "kube-apiserver OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
 - name: Allow vip kube-apiserver access IN
   community.general.ufw:
@@ -45,7 +43,6 @@
     insert_relative_to: first-ipv4
     comment: "kube-apiserver vip IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
 - name: Allow vip kube-apiserver access OUT
   community.general.ufw:
@@ -59,7 +56,6 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kube-apiserver vip OUT"
-  tags: firewall, ufw
 
   ###
   # etcd
@@ -77,7 +73,6 @@
     insert_relative_to: first-ipv4
     comment: "etcd client/peer IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
 - name: Allow etcd client/peer traffic OUT
   community.general.ufw:
@@ -92,7 +87,6 @@
     insert_relative_to: first-ipv4
     comment: "etcd client/peer OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
   ###
   # kubelet
@@ -110,7 +104,6 @@
     insert_relative_to: first-ipv4
     comment: "kubelet metrics IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
-  tags: firewall, ufw
 
 - name: Allow kubelet metrics API OUT
   community.general.ufw:
@@ -125,7 +118,6 @@
     insert_relative_to: first-ipv4
     comment: "kubelet metrics OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
-  tags: firewall, ufw
 
   ###
   # Flannel Networking
@@ -137,13 +129,12 @@
     port: "{{ flannel_vxlan_port }}"
     src: "{{ item }}"
     dest: "{{ ansible_host }}"
-    proto: tcp
+    proto: udp
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
     comment: "flannel vxlan IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
 - name: Allow VxLAN traffic OUT
   community.general.ufw:
@@ -152,13 +143,12 @@
     port: "{{ flannel_vxlan_port }}"
     src: "{{ ansible_host }}"
     dest: "{{ item }}"
-    proto: tcp
+    proto: udp
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
     comment: "flannel vxlan OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
-  tags: firewall, ufw
 
   ###
   # Pod traffic
@@ -168,26 +158,28 @@
     rule: allow
     direction: in
     src: "{{ pod_cidr}}"
-    dest: "{{ ansible_host }}"
+    dest: "{{ item }}"
     proto: any
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
     comment: "Pod Traffic IN"
-  tags: firewall, ufw
+  loop:
+    - "{{ ansible_host }}"
 
 - name: Allow Pod traffic OUT
   community.general.ufw:
     rule: allow
     direction: out
-    src: "{{ ansible_host }}"
+    src: "{{ item }}"
     dest: "{{ pod_cidr }}"
     proto: any
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
     comment: "Pod Traffic OUT"
-  tags: firewall, ufw
+  loop:
+    - "{{ ansible_host }}"
 
   ###
   # SVC traffic
@@ -203,7 +195,6 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "SVC Traffic IN"
-  tags: firewall, ufw
 
 - name: Allow SVC traffic OUT
   community.general.ufw:
@@ -216,5 +207,3 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "SVC Traffic OUT"
-  tags: firewall, ufw
-
