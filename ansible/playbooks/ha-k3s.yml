@@ -23,3 +23,41 @@
     - role: k3s.orchestration.airgap
     - role: k3s.orchestration.raspberrypi
     - role: k3s.orchestration.k3s_server
+  tasks:
+    - name: Backup the k3s config
+      ansible.builtin.copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: /etc/rancher/k3s/k3s-copy.yaml
+        owner: root
+        group: root
+        mode: '0400'
+        remote_src: true
+      tags: kubeconfig
+    - name: Update k3s config to use VIP
+      ansible.builtin.lineinfile:
+        path: /etc/rancher/k3s/k3s-copy.yaml
+        regexp: '^\s*server: https://127\.0\.0\.1:6443'
+        line: '    server: https://{{ vip }}:6443'
+      tags: kubeconfig
+    - name: Ensure ~/.kube directory exists
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.kube"
+        state: directory
+        owner: "{{ lookup('env', 'USER') }}"
+        mode: '0700'
+      delegate_to: localhost
+      tags: kubeconfig
+    - name: Download k3s config
+      ansible.builtin.fetch:
+        src: /etc/rancher/k3s/k3s-copy.yaml
+        dest: "{{ lookup('env', 'HOME') }}/.kube/k3s-config.yaml"
+        owner: "{{ lookup('env', 'USER') }}"
+        mode: '0400'
+        flat: true
+      run_once: true
+      tags: kubeconfig
+    - name: Delete k3s config backup
+      ansible.builtin.file:
+        path: /etc/rancher/k3s/k3s-copy.yaml
+        state: absent
+      tags: kubeconfig
