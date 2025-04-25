@@ -1,5 +1,5 @@
 collections:
-  - name: k3s.k3s
+  - name: k3s.orchestration
     source: https://github.com/k3s-io/k3s-ansible.git
     version: "1.0.0"
     type: git

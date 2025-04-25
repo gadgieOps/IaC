@@ -54,7 +54,6 @@
         vips:
           - "{{ vip }} dev {{ cluster_interface }}"
         unicast_src_ip: "{{ ansible_host | string }}"
-        # track_src_ip: true
         unicast_peers: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
         track_scripts:
           - chk_haproxy

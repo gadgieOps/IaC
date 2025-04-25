@@ -3,12 +3,13 @@
   ###
   # kube-apiserver
 
-- name: Allow kube-apiserver server IN
+- name: Allow  direct kube-apiserver access IN
   community.general.ufw:
     rule: allow
     direction: in
     port: "{{ kube_api_port }}"
     src: "{{ item }}"
+    dest: "{{ ansible_host }}"
     proto: tcp
     state: enabled
     insert: 0
@@ -17,7 +18,7 @@
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
   tags: firewall, ufw
 
-- name: Allow kube-apiserver OUT
+- name: Allow direct kube-apiserver access OUT
   community.general.ufw:
     rule: allow
     direction: out
@@ -30,6 +31,35 @@
     insert_relative_to: first-ipv4
     comment: "kube-apiserver OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow vip kube-apiserver access IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ haproxy_port }}"
+    src: "{{ item }}"
+    dest: "{{ vip }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "kube-apiserver vip IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+- name: Allow vip kube-apiserver access OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ haproxy_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ vip }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "kube-apiserver vip OUT"
   tags: firewall, ufw
 
   ###

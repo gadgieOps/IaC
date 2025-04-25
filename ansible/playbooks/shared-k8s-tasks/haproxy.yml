@@ -21,7 +21,8 @@
   vars:
     haproxy_frontends:
       - name: k8s-api
-        address: "{{ ansible_host }}"
+        address: "*"
+        # address: "{{ vip}}"
         port: "{{ haproxy_port }}"
         default_backend: k8s-api
         mode: tcp
@@ -31,7 +32,7 @@
       - name: k8s-api
         mode: tcp
         httpcheck: false
-        option: tcplog
+        option: tcp-check
         servers:
           - name: k8s-staging-01
             address: "{{ hostvars['k8s_staging_01']['ansible_host'] }}"
@@ -42,6 +43,4 @@
         port: "{{ kube_api_port }}"
         options:
           - check
-          - check-ssl
-          - "verify none"
   tags: haproxy

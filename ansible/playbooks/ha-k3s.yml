@@ -4,26 +4,51 @@
   gather_facts: true
   become: true
   pre_tasks:
+
     - name: Include keepalived tasks
       ansible.builtin.include_tasks:
         file: shared-k8s-tasks/keepalived.yml
       tags: vrrp
+
     - name: Include HAProxy tasks
       ansible.builtin.include_tasks:
         file: shared-k8s-tasks/haproxy.yml
       tags: haproxy
+
     - name: Setup k3s firewall rules
       ansible.builtin.include_tasks:
         file: ha-k3s-tasks/k3s-firewall.yml
       when:
         - setup_ufw | default(false) | bool
-      tags: firewall, ufw
+      tags:
+        - firewall
+        - ufw
+
+    - name: Test VRRP/HA Endpoint Reachability
+      ansible.builtin.wait_for:
+        host: "{{ vip }}"
+        port: "{{ haproxy_port }}"
+        delay: 2
+
   roles:
+
     - role: k3s.orchestration.prereq
+      tags:
+        - k3s
+        - prereq
+
     - role: k3s.orchestration.airgap
-    - role: k3s.orchestration.raspberrypi
+      tags:
+        - k3s
+        - airgap
+
     - role: k3s.orchestration.k3s_server
+      tags:
+        - k3s
+        - server
+
   tasks:
+
     - name: Backup the k3s config
       ansible.builtin.copy:
         src: /etc/rancher/k3s/k3s.yaml
@@ -33,12 +58,14 @@
         mode: '0400'
         remote_src: true
       tags: kubeconfig
+
     - name: Update k3s config to use VIP
       ansible.builtin.lineinfile:
         path: /etc/rancher/k3s/k3s-copy.yaml
         regexp: '^\s*server: https://127\.0\.0\.1:6443'
-        line: '    server: https://{{ vip }}:6443'
+        line: '    server: https://{{ vip }}:{{ haproxy_port }}'
       tags: kubeconfig
+
     - name: Ensure ~/.kube directory exists
       ansible.builtin.file:
         path: "{{ lookup('env', 'HOME') }}/.kube"
@@ -47,6 +74,7 @@
         mode: '0700'
       delegate_to: localhost
       tags: kubeconfig
+
     - name: Download k3s config
       ansible.builtin.fetch:
         src: /etc/rancher/k3s/k3s-copy.yaml
@@ -54,8 +82,9 @@
         owner: "{{ lookup('env', 'USER') }}"
         mode: '0400'
         flat: true
-      run_once: true
+      delegate_to: "{{ groups[server_group][0] }}"
       tags: kubeconfig
+
     - name: Delete k3s config backup
       ansible.builtin.file:
         path: /etc/rancher/k3s/k3s-copy.yaml
