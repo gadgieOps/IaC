@@ -96,3 +96,32 @@
     comment: "etcd client/peer OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
   tags: firewall, ufw
+
+- name: Allow hashicorp vault UI traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ vault_ui_port }}"
+    src: "{{ secure_zone }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "hashicorp vault UI IN"
+  when: vault | default(false) | bool
+  tags: firewall, ufw
+
+- name: Allow DNS traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ dns_port }}"
+    src: "{{ secure_zone }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "DNS IN"
+  tags: firewall, ufw

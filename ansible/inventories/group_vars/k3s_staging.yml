@@ -4,6 +4,10 @@
 secure_zone: "192.168.6.1/32" # Who can access the API server
 setup_ufw: true
 
+# Optional ufw entries
+vault: true
+dns: true
+
 ###
 # Kubernetes
 k3s_version: v1.32.3+k3s1
@@ -32,6 +36,8 @@ etcd_client_port: 2379
 etcd_peer_port: 2380
 kubelet_metrics_port: 10250
 flannel_vxlan_port: 8472
+vault_ui_port: 32000
+dns_port: 53
 
 ###
 # Keepalived
