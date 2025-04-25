@@ -22,7 +22,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kubelet metrics IN"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
   tags: firewall, ufw
 
 - name: Allow kubelet metrics API OUT
@@ -37,7 +37,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kubelet metrics OUT"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
   tags: firewall, ufw
 
   ###
