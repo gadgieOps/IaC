@@ -6,6 +6,7 @@ setup_ufw: true
 pod_cidr: "10.42.0.0/16"
 svc_cidr: "10.43.0.0/16"
 domain_name: "gadgieops.yem"
+cluster_interface: eth1
 
 # Optional services
 dns: true
@@ -35,6 +36,7 @@ extra_server_args: >-
   --advertise-port={{ haproxy_port }}
   --cluster-cidr={{ pod_cidr }}
   --service-cidr={{ svc_cidr }}
+  --flannel-iface={{ cluster_interface }}
 
 ###
 # Ports
@@ -51,8 +53,6 @@ metallb_port: 7946
 # Keepalived
 vip: 192.168.6.6
 api_endpoint: "{{ vip }}"
-
-cluster_interface: eth1
 vrrp_password: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   35626639333532623761383031633562326531313537373736353233333839306138393063363930
