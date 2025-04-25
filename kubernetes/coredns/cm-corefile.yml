@@ -19,7 +19,6 @@ data:
         file /etc/coredns/zones/gadgieops.yem.zone {
           reload 5s
         }
-
     }
 
     192.168.6.0/27:5555 {
