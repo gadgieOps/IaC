@@ -1,0 +1,79 @@
+---
+
+  ###
+  # Vault
+- name: Allow hashicorp vault UI traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ vault_ui_port }}"
+    src: "{{ secure_zone }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "hashicorp vault UI IN"
+  when: vault | default(false) | bool
+
+  ###
+  # MetalLB
+- name: Allow metallb tcp traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ metallb_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "metallb IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  when: metallb | default(false) | bool
+
+- name: Allow metallb tcp traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ metallb_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "metallb OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  when: metallb | default(false) | bool
+
+- name: Allow metallb udp traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ metallb_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: udp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "metallb IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  when: metallb | default(false) | bool
+
+- name: Allow metallb udp traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ metallb_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: udp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "metallb OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  when: metallb | default(false) | bool

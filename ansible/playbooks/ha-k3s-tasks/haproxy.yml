@@ -4,7 +4,7 @@
     rule: allow
     port: "{{ haproxy_port }}"
     src: "{{ secure_zone }}"
-    dest: "{{ ansible_host }}"
+    dest: "{{ vip }}"
     proto: tcp
     state: enabled
     insert: 0

@@ -1,5 +1,4 @@
 ---
-
   ###
   # kube-apiserver
 
@@ -65,8 +64,6 @@
   ###
   # etcd
 
-  # client
-
 - name: Allow etcd client/peer traffic IN
   community.general.ufw:
     rule: allow
@@ -97,31 +94,127 @@
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
   tags: firewall, ufw
 
-- name: Allow hashicorp vault UI traffic IN
+  ###
+  # kubelet
+
+- name: Allow kubelet metrics traffic IN
   community.general.ufw:
     rule: allow
     direction: in
-    port: "{{ vault_ui_port }}"
-    src: "{{ secure_zone }}"
+    port: "{{ kubelet_metrics_port }}"
+    src: "{{ item }}"
     dest: "{{ ansible_host }}"
     proto: tcp
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
-    comment: "hashicorp vault UI IN"
-  when: vault | default(false) | bool
+    comment: "kubelet metrics IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
   tags: firewall, ufw
 
-- name: Allow DNS traffic IN
+- name: Allow kubelet metrics API OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ kubelet_metrics_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "kubelet metrics OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
+  tags: firewall, ufw
+
+  ###
+  # Flannel Networking
+
+- name: Allow VxLAN traffic IN
   community.general.ufw:
     rule: allow
     direction: in
-    port: "{{ dns_port }}"
-    src: "{{ secure_zone }}"
+    port: "{{ flannel_vxlan_port }}"
+    src: "{{ item }}"
     dest: "{{ ansible_host }}"
     proto: tcp
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
-    comment: "DNS IN"
+    comment: "flannel vxlan IN"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
   tags: firewall, ufw
+
+- name: Allow VxLAN traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ flannel_vxlan_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "flannel vxlan OUT"
+  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  tags: firewall, ufw
+
+  ###
+  # Pod traffic
+
+- name: Allow Pod traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    src: "{{ pod_cidr}}"
+    dest: "{{ ansible_host }}"
+    proto: any
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "Pod Traffic IN"
+  tags: firewall, ufw
+
+- name: Allow Pod traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    src: "{{ ansible_host }}"
+    dest: "{{ pod_cidr }}"
+    proto: any
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "Pod Traffic OUT"
+  tags: firewall, ufw
+
+  ###
+  # SVC traffic
+
+- name: Allow SVC traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    src: "{{ svc_cidr }}"
+    dest: "{{ ansible_host }}"
+    proto: any
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "SVC Traffic IN"
+  tags: firewall, ufw
+
+- name: Allow SVC traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    src: "{{ ansible_host }}"
+    dest: "{{ svc_cidr }}"
+    proto: any
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "SVC Traffic OUT"
+  tags: firewall, ufw
+

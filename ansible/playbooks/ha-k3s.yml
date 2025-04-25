@@ -5,23 +5,27 @@
   become: true
   pre_tasks:
 
+    - name: Setup k3s firewall rules
+      ansible.builtin.include_tasks:
+        file: ha-k3s-tasks/fw.yml
+        apply:
+          tags: ufw
+      when:
+        - setup_ufw | default(false) | bool
+      tags: ufw
+
     - name: Include keepalived tasks
       ansible.builtin.include_tasks:
-        file: shared-k8s-tasks/keepalived.yml
-      tags: vrrp
+        file: ha-k3s-tasks/keepalived.yml
+      tags:
+        - vrrp
+        - ufw
 
     - name: Include HAProxy tasks
       ansible.builtin.include_tasks:
-        file: shared-k8s-tasks/haproxy.yml
-      tags: haproxy
-
-    - name: Setup k3s firewall rules
-      ansible.builtin.include_tasks:
-        file: ha-k3s-tasks/k3s-firewall.yml
-      when:
-        - setup_ufw | default(false) | bool
+        file: ha-k3s-tasks/haproxy.yml
       tags:
-        - firewall
+        - haproxy
         - ufw
 
     - name: Test VRRP/HA Endpoint Reachability
@@ -49,44 +53,20 @@
 
   tasks:
 
-    - name: Backup the k3s config
-      ansible.builtin.copy:
-        src: /etc/rancher/k3s/k3s.yaml
-        dest: /etc/rancher/k3s/k3s-copy.yaml
-        owner: root
-        group: root
-        mode: '0400'
-        remote_src: true
-      tags: kubeconfig
+    - name: Include k3s config tasks
+      ansible.builtin.include_tasks:
+        file: ha-k3s-tasks/config.yml
+        apply:
+          tags: kubeconfig
+      tags:
+        - kubeconfig
 
-    - name: Update k3s config to use VIP
-      ansible.builtin.lineinfile:
-        path: /etc/rancher/k3s/k3s-copy.yaml
-        regexp: '^\s*server: https://127\.0\.0\.1:6443'
-        line: '    server: https://{{ vip }}:{{ haproxy_port }}'
-      tags: kubeconfig
-
-    - name: Ensure ~/.kube directory exists
-      ansible.builtin.file:
-        path: "{{ lookup('env', 'HOME') }}/.kube"
-        state: directory
-        owner: "{{ lookup('env', 'USER') }}"
-        mode: '0700'
-      delegate_to: localhost
-      tags: kubeconfig
-
-    - name: Download k3s config
-      ansible.builtin.fetch:
-        src: /etc/rancher/k3s/k3s-copy.yaml
-        dest: "{{ lookup('env', 'HOME') }}/.kube/k3s-config.yaml"
-        owner: "{{ lookup('env', 'USER') }}"
-        mode: '0400'
-        flat: true
-      delegate_to: "{{ groups[server_group][0] }}"
-      tags: kubeconfig
-
-    - name: Delete k3s config backup
-      ansible.builtin.file:
-        path: /etc/rancher/k3s/k3s-copy.yaml
-        state: absent
-      tags: kubeconfig
+    - name: Include DNS tasks
+      ansible.builtin.include_tasks:
+        file: ha-k3s-tasks/dns.yml
+        apply:
+          tags: dns
+      when: dns | default(false) | bool
+      tags:
+        - dns
+        - ufw

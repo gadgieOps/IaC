@@ -12,6 +12,7 @@
     comment: "vrrp IN"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
   when: setup_ufw | default(false) | bool
+  tags: firewall, ufw
 
 - name: Allow vrrp traffic Out
   community.general.ufw:
@@ -26,6 +27,7 @@
     comment: "vrrp OUT"
   loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
   when: setup_ufw | default(false) | bool
+  tags: firewall, ufw
 
   ###
   # TODO: script is running as root

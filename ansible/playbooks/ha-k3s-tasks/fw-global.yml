@@ -1,0 +1,73 @@
+---
+- name: Disable UFW firewall
+  community.general.ufw:
+    state: reset
+
+- name: Allow SSH traffic
+  community.general.ufw:
+    state: disabled
+    rule: allow
+    direction: in
+    port: "22"
+    src: "{{ secure_zone }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "SSH IN"
+
+- name: Allow HTTP traffic OUT
+  community.general.ufw:
+    state: disabled
+    rule: allow
+    direction: out
+    port: "80"
+    src: "{{ ansible_host }}"
+    dest: any
+    proto: tcp
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "HTTP OUT"
+
+- name: Allow HTTPS traffic OUT
+  community.general.ufw:
+    state: disabled
+    rule: allow
+    direction: out
+    port: "443"
+    src: "{{ ansible_host }}"
+    dest: any
+    proto: tcp
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "HTTPS OUT"
+
+- name: Allow DNS TCP traffic OUT
+  community.general.ufw:
+    state: disabled
+    rule: allow
+    direction: out
+    port: "53"
+    src: "{{ ansible_host }}"
+    dest: any
+    proto: tcp
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "DNS OUT"
+
+- name: Allow DNS UDP traffic OUT
+  community.general.ufw:
+    state: disabled
+    rule: allow
+    direction: out
+    port: "53"
+    src: "{{ ansible_host }}"
+    dest: any
+    proto: udp
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "DNS OUT"
+
+- name: Enable UFW firewall
+  community.general.ufw:
+    state: enabled

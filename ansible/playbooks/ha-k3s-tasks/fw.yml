@@ -1,0 +1,19 @@
+---
+
+- name: Include global firewall rules
+  ansible.builtin.include_tasks:
+    file: fw-global.yml
+    apply:
+      tags: ufw
+
+- name: Include shared firewall rules
+  ansible.builtin.include_tasks:
+    file: fw-k3s.yml
+    apply:
+      tags: ufw
+
+- name: Include optional firewall rules
+  ansible.builtin.include_tasks:
+    file: fw-optional.yml
+    apply:
+      tags: ufw
