@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: dns-zones
+    namespace: dns
+data:
+    gadgieops.yem.zone: |
+        $TTL 3600
+        @   IN  SOA ns1.gadgieops.yem. admin.gadgieops.yem. (
+                2023101001 ; Serial
+                3600       ; Refresh
+                1800       ; Retry
+                1209600    ; Expire
+                3600 )     ; Minimum TTL
+
+            IN  NS  ns1.gadgieops.yem.
+
+        ns1            IN  A 192.168.6.7
+        k8s-staging-01 IN  A 192.168.6.3
+        k8s-staging-02 IN  A 192.168.6.4
+        k8s-staging-03 IN  A 192.168.6.5
+        k8s-staging    IN  A 192.168.6.6
+
+        ; These lines indicate to clients that this server supports DNS Service Discovery.
+        b._dns-sd._udp           PTR  @
+        db._dns-sd._udp          PTR  @
+        lb._dns-sd._udp          PTR  @
+
+    db.192.168.6.zone: |
+        $TTL 3600
+        @   IN  SOA ns1.gadgieops.yem. admin.gadgieops.yem. (
+                2023101001 ; Serial
+                3600       ; Refresh
+                1800       ; Retry
+                1209600    ; Expire
+                3600 )     ; Minimum TTL
+
+            IN  NS  ns1.gadgieops.yem.
+
+        7.6.168.192.in-addr.arpa. IN PTR ns1.gadgieops.yem.

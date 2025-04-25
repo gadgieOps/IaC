@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: corefile
+  namespace: dns
+data:
+  Corefile: |
+    (health) {
+        ready
+        reload 5s
+        errors
+        log
+        prometheus :9153
+    }
+
+    gadgieops.yem:5555 {
+        import health
+        file /etc/coredns/zones/gadgieops.yem.zone {
+          reload 5s
+        }
+
+    }
+
+    192.168.6.0/27:5555 {
+        import health
+        file /etc/coredns/zones/db.192.168.6.zone {
+          reload 5s
+        }
+    }
+
+    .:5555 {
+        forward . 8.8.8.8 8.8.4.4 {
+          max_concurrent 1000
+        }
+        import health
+        health {
+          lameduck 5s
+        }
+    }

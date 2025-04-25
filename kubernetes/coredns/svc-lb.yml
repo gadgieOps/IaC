@@ -1,0 +1,41 @@
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: coredns
+  namespace: metallb
+spec:
+  addresses:
+    - 192.168.6.7/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: dns-advert
+  namespace: metallb
+spec:
+  ipAddressPools:
+    - coredns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns
+  namespace: dns
+  labels:
+    app: coredns
+  annotations:
+    metallb.universe.tf/address-pool: coredns
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 53
+      name: dns-tcp
+      protocol: TCP
+      targetPort: 5555
+    - port: 53
+      name: dns-udp
+      protocol: UDP
+      targetPort: 5555
+  selector:
+    k8s-app: coredns
