@@ -32,24 +32,24 @@
         "root": "/dev/mapper/ubuntu--vg-ubuntu--lv"
     },
     "date_time": {
-        "date": "2025-04-24",
-        "day": "24",
-        "epoch": "1745535802",
-        "epoch_int": "1745535802",
-        "hour": "23",
-        "iso8601": "2025-04-24T23:03:22Z",
-        "iso8601_basic": "20250424T230322371605",
-        "iso8601_basic_short": "20250424T230322",
-        "iso8601_micro": "2025-04-24T23:03:22.371605Z",
-        "minute": "03",
+        "date": "2025-04-25",
+        "day": "25",
+        "epoch": "1745568083",
+        "epoch_int": "1745568083",
+        "hour": "08",
+        "iso8601": "2025-04-25T08:01:23Z",
+        "iso8601_basic": "20250425T080123733351",
+        "iso8601_basic_short": "20250425T080123",
+        "iso8601_micro": "2025-04-25T08:01:23.733351Z",
+        "minute": "01",
         "month": "04",
-        "second": "22",
-        "time": "23:03:22",
+        "second": "23",
+        "time": "08:01:23",
         "tz": "UTC",
         "tz_dst": "UTC",
         "tz_offset": "+0000",
-        "weekday": "Thursday",
-        "weekday_number": "4",
+        "weekday": "Friday",
+        "weekday_number": "5",
         "weeknumber": "16",
         "year": "2025"
     },
@@ -514,7 +514,7 @@
         "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
         "PWD": "/home/ansible",
         "SHELL": "/bin/bash",
-        "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-iprjzvuqctgghybkhlgmchrlieyrnjgb ; /usr/bin/python3.12 /home/ansible/.ansible/tmp/ansible-tmp-1745535801.623174-21256-39452021992789/AnsiballZ_setup.py",
+        "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-vjydsmbyzcymziggphcjdfrrfmwjayae ; /usr/bin/python3.12 /home/ansible/.ansible/tmp/ansible-tmp-1745568083.379318-34427-132210976632938/AnsiballZ_setup.py",
         "SUDO_GID": "1002",
         "SUDO_UID": "1002",
         "SUDO_USER": "ansible",
@@ -710,8 +710,8 @@
     "hostnqn": "",
     "interfaces": [
         "lo",
-        "eth1",
-        "eth0"
+        "eth0",
+        "eth1"
     ],
     "is_chroot": false,
     "iscsi_iqn": "iqn.2004-10.com.ubuntu:01:b74fa4a2ed3d",
@@ -808,9 +808,9 @@
         "type": "loopback"
     },
     "loadavg": {
-        "15m": 0.0,
-        "1m": 0.01220703125,
-        "5m": 0.0068359375
+        "15m": 0.00341796875,
+        "1m": 0.05615234375,
+        "5m": 0.0146484375
     },
     "locally_reachable_ips": {
         "ipv4": [
@@ -854,16 +854,16 @@
     },
     "machine": "aarch64",
     "machine_id": "c62729afa8954a529040c1361b8f1f38",
-    "memfree_mb": 3471,
+    "memfree_mb": 3460,
     "memory_mb": {
         "nocache": {
-            "free": 3680,
-            "used": 222
+            "free": 3679,
+            "used": 223
         },
         "real": {
-            "free": 3471,
+            "free": 3460,
             "total": 3902,
-            "used": 431
+            "used": 442
         },
         "swap": {
             "cached": 0,
@@ -876,20 +876,20 @@
     "module_setup": true,
     "mounts": [
         {
-            "block_available": 5779554,
+            "block_available": 5777635,
             "block_size": 4096,
             "block_total": 7817692,
-            "block_used": 2038138,
+            "block_used": 2040057,
             "device": "/dev/mapper/ubuntu--vg-ubuntu--lv",
             "dump": 0,
             "fstype": "ext4",
-            "inode_available": 1937480,
+            "inode_available": 1937472,
             "inode_total": 1998848,
-            "inode_used": 61368,
+            "inode_used": 61376,
             "mount": "/",
             "options": "rw,relatime",
             "passno": 0,
-            "size_available": 23673053184,
+            "size_available": 23665192960,
             "size_total": 32021266432,
             "uuid": "bd4f140c-392d-4b19-9911-ee6f9830967b"
         },
@@ -998,7 +998,7 @@
         "features": "+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified",
         "version": 255
     },
-    "uptime_seconds": 140,
+    "uptime_seconds": 64,
     "user_dir": "/root",
     "user_gecos": "root",
     "user_gid": 0,
