@@ -166,6 +166,7 @@
     comment: "Pod Traffic IN"
   loop:
     - "{{ ansible_host }}"
+    - "{{ pod_cidr}}"
 
 - name: Allow Pod traffic OUT
   community.general.ufw:
@@ -180,6 +181,7 @@
     comment: "Pod Traffic OUT"
   loop:
     - "{{ ansible_host }}"
+    - "{{ pod_cidr }}"
 
   ###
   # SVC traffic
