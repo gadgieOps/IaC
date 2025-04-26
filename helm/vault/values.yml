@@ -1,21 +1,62 @@
 ---
+global:
+  namespace: vault
+  tlsDisble: true
+injector:
+  enabled: true
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "1.6.2"
+  agentImage:
+    repository: "hashicorp/vault"
+    tag: "1.19.0"
 server:
-  ha:
+  enabled: true
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.19.0"
+  dev:
+    enabled: false
+  ingress:
+    enabled: false
+  auditStorage:
     enabled: true
-    replicas: 3
+  standalone:
+    enabled: true
     config: |
-      ui = true
-
       listener "tcp" {
         tls_disable = 1
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
+        address = "0.0.0.0:8200"
+        cluster_address = "0.0.0.0:8201"
+        }
+      storage "file" {
+        path = "/vault/data"
       }
-      storage "consul" {
-        path = "vault"
-        address = "consul-consul-server.consul.svc.cluster.local:8500"
-      }
+  ha:
+    enabled: false
+    replicas: 3
+    raft:
+      enabled: true
+      config: |
+        listener "tcp" {
+          tls_disable = 1
+          address = "0.0.0.0:8200"
+          cluster_address = "0.0.0.0:8201"
+        }
+        storage "raft" {
+          path = "/vault/data"
+          retry_join {
+            leader_api_addr = "http://vault-0.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-1.vault-internal:8200"
+          }
+          retry_join {
+            leader_api_addr = "http://vault-2.vault-internal:8200"
+          }
+        }
 ui:
   enabled: true
+  activeVaultPodOnly: false
   serviceType: NodePort
   serviceNodePort: 32000
