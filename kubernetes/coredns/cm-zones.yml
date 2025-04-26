@@ -26,6 +26,9 @@ data:
         vault          IN  A 192.168.6.3
         vault          IN  A 192.168.6.4
         vault          IN  A 192.168.6.5
+        vault-0        IN  A 192.168.6.3
+        vault-1        IN  A 192.168.6.4
+        vault-2        IN  A 192.168.6.5
 
         ; These lines indicate to clients that this server supports DNS Service Discovery.
         b._dns-sd._udp           PTR  @
