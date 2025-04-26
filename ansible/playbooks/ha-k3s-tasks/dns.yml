@@ -28,6 +28,8 @@
     dest: "{{ dns_ip }}"
     proto: tcp
     state: enabled
+    route: true
+    interface: "{{ cluster_interface }}"
     insert: 0
     insert_relative_to: first-ipv4
     comment: "DNS IN"
@@ -44,6 +46,8 @@
     dest: "{{ dns_ip }}"
     proto: udp
     state: enabled
+    route: true
+    interface: "{{ cluster_interface }}"
     insert: 0
     insert_relative_to: first-ipv4
     comment: "DNS IN"
