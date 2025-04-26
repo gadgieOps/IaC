@@ -1,12 +1,8 @@
 ---
-#global:
-
-# ingress:
-#   enabled: true
-#   ingressClassName:
-
-# ha:
-#   enabled: true
+server:
+  ha:
+    enabled: true
+    replicas: 3
 
 ui:
   enabled: true

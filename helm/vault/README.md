@@ -16,6 +16,9 @@ helm install vault hashicorp/vault --version 0.30.0 --create-namespace --namespa
 
 # update values
 helm upgrade -f values.yml -n vault vault hashicorp/vault
+
+# Uninstall
+helm uninstall vault hashicorp/vault --namespace vault
 ```
 
 ## Notes

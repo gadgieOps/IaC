@@ -20,6 +20,12 @@ data:
         k8s-staging-02 IN  A 192.168.6.4
         k8s-staging-03 IN  A 192.168.6.5
         k8s-staging    IN  A 192.168.6.6
+        consul         IN  A 192.168.6.3
+        consul         IN  A 192.168.6.4
+        consul         IN  A 192.168.6.5
+        vault          IN  A 192.168.6.3
+        vault          IN  A 192.168.6.4
+        vault          IN  A 192.168.6.5
 
         ; These lines indicate to clients that this server supports DNS Service Discovery.
         b._dns-sd._udp           PTR  @

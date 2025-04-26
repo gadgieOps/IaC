@@ -1,0 +1,19 @@
+---
+
+
+client:
+  enabled: true
+
+server:
+  replicas: 1
+  bootstrapExpect: 1
+  disruptionBudget:
+    maxUnavailable: 0
+
+ui:
+  enabled: true
+  service:
+    type: NodePort
+    nodePort:
+      http: 32080
+      https: 32443
