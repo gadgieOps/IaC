@@ -14,7 +14,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kube-apiserver IN"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ servers }}"
 
 - name: Allow direct kube-apiserver access OUT
   community.general.ufw:
@@ -28,7 +28,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kube-apiserver OUT"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ servers }}"
 
 - name: Allow vip kube-apiserver access IN
   community.general.ufw:
@@ -42,7 +42,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kube-apiserver vip IN"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ servers }}"
 
 - name: Allow vip kube-apiserver access OUT
   community.general.ufw:
@@ -72,7 +72,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "etcd client/peer IN"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ servers | reject('search', ansible_host) }}"
 
 - name: Allow etcd client/peer traffic OUT
   community.general.ufw:
@@ -86,7 +86,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "etcd client/peer OUT"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ servers | reject('search', ansible_host) }}"
 
   ###
   # kubelet
@@ -103,7 +103,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kubelet metrics IN"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
+  loop: "{{ all_nodes | reject('search', ansible_host) }}"
 
 - name: Allow kubelet metrics API OUT
   community.general.ufw:
@@ -117,7 +117,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "kubelet metrics OUT"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
+  loop: "{{ all_nodes | reject('search', ansible_host) }}"
 
   ###
   # Flannel Networking
@@ -134,7 +134,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "flannel vxlan IN"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ all_nodes | reject('search', ansible_host) }}"
 
 - name: Allow VxLAN traffic OUT
   community.general.ufw:
@@ -148,7 +148,7 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "flannel vxlan OUT"
-  loop: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | map('string') | list | reject('search', ansible_host) }}"
+  loop: "{{ all_nodes | reject('search', ansible_host) }}"
 
   ###
   # Pod traffic

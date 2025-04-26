@@ -1,0 +1,19 @@
+---
+- name: Set servers list
+  ansible.builtin.set_fact:
+    servers: "{{ groups['k3s_servers'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
+
+- name: Set agents list
+  ansible.builtin.set_fact:
+    agents: "{{ groups['k3s_agents'] | map('extract', hostvars, ['ansible_host']) | map('string') | list }}"
+  when: groups['k3s_agents'] is defined
+
+- name: Set all nodes list when agents are defined
+  ansible.builtin.set_fact:
+    all_nodes: "{{ servers + agents }}"
+  when: agents is defined
+
+- name: Set all nodes list when agents are not defined
+  ansible.builtin.set_fact:
+    all_nodes: "{{ servers }}"
+  when: agents is not defined

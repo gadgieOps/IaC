@@ -1,9 +1,17 @@
 ---
 - name: Deploy k3s
-  hosts: all
+  hosts: k3s_servers
   gather_facts: true
   become: true
   pre_tasks:
+
+    - name: Set node lists
+      ansible.builtin.include_tasks:
+        file: ha-k3s-tasks/set-node-lists.yml
+        apply:
+          tags: always
+      tags:
+        - always
 
     - name: Setup k3s firewall rules
       ansible.builtin.include_tasks:
@@ -11,8 +19,18 @@
         apply:
           tags: ufw
       when:
-        - setup_ufw | default(false) | bool
+        - setup_ufw | default(true) | bool
       tags: ufw
+
+    - name: Include DNS tasks
+      ansible.builtin.include_tasks:
+        file: ha-k3s-tasks/dns.yml
+        apply:
+          tags: dns
+      when: dns | default(false) | bool
+      tags:
+        - dns
+        - ufw
 
     - name: Include keepalived tasks
       ansible.builtin.include_tasks:
@@ -51,6 +69,12 @@
         - k3s
         - server
 
+    - role: k3s.orchestration.k3s_agent
+      when: agents is defined
+      tags:
+        - k3s
+        - agent
+
   tasks:
 
     - name: Include k3s config tasks
@@ -60,13 +84,3 @@
           tags: kubeconfig
       tags:
         - kubeconfig
-
-    - name: Include DNS tasks
-      ansible.builtin.include_tasks:
-        file: ha-k3s-tasks/dns.yml
-        apply:
-          tags: dns
-      when: dns | default(false) | bool
-      tags:
-        - dns
-        - ufw

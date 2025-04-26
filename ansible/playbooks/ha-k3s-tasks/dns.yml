@@ -24,13 +24,14 @@
     rule: allow
     direction: in
     port: "{{ dns_port }}"
-    src: "{{ secure_zone }}"
+    src: "{{ item }}"
     dest: "{{ dns_ip }}"
     proto: tcp
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
     comment: "DNS IN"
+  loop: "{{ all_nodes + [secure_zone] | reject('search', ansible_host) }}"
   when: dns | default(false) | bool
   tags: ufw
 
@@ -46,5 +47,6 @@
     insert: 0
     insert_relative_to: first-ipv4
     comment: "DNS IN"
+  loop: "{{ all_nodes + [secure_zone] | reject('search', ansible_host) }}"
   when: dns | default(false) | bool
   tags: ufw
