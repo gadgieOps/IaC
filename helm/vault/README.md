@@ -8,7 +8,7 @@ This chart offers various configuration options. Instead of duplicating the docu
 
 [Vault Helm Chart Documentation](https://developer.hashicorp.com/vault/docs/platform/k8s/helm)
 
-## Install
+## Useful Commands
 
 ```bash
 # Install
@@ -18,7 +18,10 @@ helm install vault hashicorp/vault --version 0.30.0 --create-namespace --namespa
 helm upgrade -f values.yml -n vault vault hashicorp/vault
 
 # recycle server pods
-kubectl delete pod -n vault -l component=server 
+kubectl delete pod -n vault -l component=server
+
+# launch a shell in a vault pod
+kubectl exec --stdin=true --tty=true vault-0 -n vault -- /bin/sh
 
 # Uninstall
 helm uninstall vault hashicorp/vault --namespace vault
