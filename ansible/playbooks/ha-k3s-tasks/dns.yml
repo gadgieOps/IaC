@@ -40,7 +40,7 @@
     rule: allow
     direction: in
     port: "{{ dns_port }}"
-    src: "{{ secure_zone }}"
+    src: "{{ item }}"
     dest: "{{ dns_ip }}"
     proto: udp
     state: enabled
