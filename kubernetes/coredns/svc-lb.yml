@@ -5,6 +5,12 @@ metadata:
   name: coredns
   namespace: metallb
 spec:
+  serviceAllocation:
+    namespaces: 
+      - dns
+    serviceSelectors:
+      - matchLabels:
+          app: coredns
   addresses:
     - 192.168.6.7/32
 ---
