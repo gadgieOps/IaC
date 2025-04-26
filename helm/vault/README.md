@@ -27,6 +27,10 @@ kubectl exec --stdin=true --tty=true vault-0 -n vault -- /bin/sh
 helm uninstall vault hashicorp/vault --namespace vault
 ```
 
+## TLS Setup
+
+See: [Kubernetes TLS Guide](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls)
+
 ## Notes
 
 - Refer to the [official documentation](https://developer.hashicorp.com/vault/docs/platform/k8s/helm) for best practices and advanced configurations

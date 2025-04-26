@@ -20,7 +20,11 @@
           tags: ufw
       when:
         - setup_ufw | default(true) | bool
-      tags: ufw
+      tags:
+        - ufw
+        - ufw-global
+        - ufw-k3s
+        - ufw-opt
 
     - name: Include DNS tasks
       ansible.builtin.include_tasks:

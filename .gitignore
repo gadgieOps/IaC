@@ -37,6 +37,7 @@ audits/*
 .env.*
 secrets.yml
 secrets.json
+**/creds/*
 
 ##########################
 #      Common Files      #
@@ -143,3 +144,9 @@ vagrant/k8s-staging/seeds/user-data
 
 .vscode/
 *.code-workspace
+
+##########################
+#    Scratch Directory   #
+##########################
+
+**/scratch/*

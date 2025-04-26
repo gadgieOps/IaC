@@ -45,7 +45,15 @@ etcd_client_port: 2379
 etcd_peer_port: 2380
 kubelet_metrics_port: 10250
 flannel_vxlan_port: 8472
-vault_ui_port: 32000
+vault_ports:
+  - name: ui
+    port: 32000
+  - name: api
+    port: 32001
+  # - name: active
+  #   port: 32002
+  # - name: standby
+  #   port: 32003
 dns_port: 53
 metallb_port: 7946
 

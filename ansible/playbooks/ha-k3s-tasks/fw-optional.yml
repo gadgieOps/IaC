@@ -2,18 +2,20 @@
 
   ###
   # Vault
+
 - name: Allow hashicorp vault UI traffic IN
   community.general.ufw:
     rule: allow
     direction: in
-    port: "{{ vault_ui_port }}"
+    port: "{{ item.port }}"
     src: "{{ secure_zone }}"
     dest: "{{ ansible_host }}"
     proto: tcp
     state: enabled
     insert: 0
     insert_relative_to: first-ipv4
-    comment: "hashicorp vault UI IN"
+    comment: "vault {{ item.name }} IN"
+  with_items: "{{ vault_ports }}"
   when: vault | default(false) | bool
 
   ###
