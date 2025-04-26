@@ -24,6 +24,7 @@ server:
   standalone:
     enabled: true
     config: |
+      ui = true
       listener "tcp" {
         tls_disable = 1
         address = "0.0.0.0:8200"
@@ -38,6 +39,7 @@ server:
     raft:
       enabled: true
       config: |
+        ui = true
         listener "tcp" {
           tls_disable = 1
           address = "0.0.0.0:8200"
