@@ -17,6 +17,9 @@ helm install vault hashicorp/vault --version 0.30.0 --create-namespace --namespa
 # update values
 helm upgrade -f values.yml -n vault vault hashicorp/vault
 
+# recycle server pods
+kubectl delete pod -n vault -l component=server 
+
 # Uninstall
 helm uninstall vault hashicorp/vault --namespace vault
 ```
