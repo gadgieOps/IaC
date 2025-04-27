@@ -2,6 +2,14 @@
 
 This repository contains configuration for deploying Hashicorp Vault on Kubernetes using Helm.
 
+## Dependencies
+
+### TLS Setup
+
+Script: scripts/setup-vault-tls.sh
+
+See: [Kubernetes TLS Guide](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls)
+
 ## Configuration
 
 This chart offers various configuration options. Instead of duplicating the documentation, please refer to the official Hashicorp documentation for detailed configuration instructions:
@@ -26,10 +34,6 @@ kubectl exec --stdin=true --tty=true vault-0 -n vault -- /bin/sh
 # Uninstall
 helm uninstall vault hashicorp/vault --namespace vault
 ```
-
-## TLS Setup
-
-See: [Kubernetes TLS Guide](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls)
 
 ## Notes
 
