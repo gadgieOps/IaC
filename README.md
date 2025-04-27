@@ -1,8 +1,8 @@
-# home-iac
+# Test/Development Environmet - IaC
 
 ## Overview
 
-This repository contains Infrastructure as Code (IaC) configurations for managing a staging environment for my home lab infrastructure. The goal is to maintain a reliable, efficient, and secure home environment through code-driven infrastructure management. No production data is stored in this repo. The staging environment is fully ephemeral and is routinely cycled.
+This repository contains Infrastructure as Code (IaC) configurations for managing a ephemeral environment that I usea as a development and test environment for my home lab system. The goal is to maintain a reliable, efficient, and secure home environment through code-driven infrastructure management. No production data is stored in this repo. This environment is fully ephemeral and is routinely recycled.
 
 ## Philosophy
 
