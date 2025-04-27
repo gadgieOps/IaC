@@ -3,6 +3,8 @@ set -e
 
 # Setup Vault with TLS based on the tutorial:
 # https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls
+# This script appears to be a development tool for managing Docker containers.
+# WARNING: This is designed for development only, not intended for production environments.
 
 # Colors for output
 GREEN='\033[38;5;108m'
@@ -77,7 +79,11 @@ subjectAltName = @alt_names
 DNS.1 = *.${VAULT_SERVICE_NAME}
 DNS.2 = *.${VAULT_SERVICE_NAME}.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
 DNS.3 = *.${VAULT_K8S_NAMESPACE}
+DNS.4 = vault.gadgieops.yem
 IP.1 = 127.0.0.1
+IP.2 = 192.168.6.3
+IP.3 = 192.168.6.4
+IP.4 = 192.168.6.5
 EOF
 
 log "INFO" "Generating CSR..."
@@ -90,7 +96,7 @@ cat > ${WORKDIR}/csr.yaml <<EOF
 apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
-     name: vault.svc
+    name: vault.svc
 spec:
      signerName: kubernetes.io/kubelet-serving
      expirationSeconds: 8640000
@@ -101,6 +107,14 @@ spec:
      - server auth
 EOF
 
+# Check if CSR already exists, delete it if it does
+if kubectl get csr vault.svc &>/dev/null; then
+    log "WARN" "CSR vault.svc already exists, deleting it first..."
+    kubectl delete csr vault.svc || { log "ERROR" "Failed to delete existing CSR"; exit 1; }
+    log "INFO" "Existing CSR deleted successfully"
+fi
+
+# Create the new CSR
 kubectl create -f ${WORKDIR}/csr.yaml || { log "ERROR" "Failed to create CSR in Kubernetes"; exit 1; }
 log "SUCCESS" "CSR created successfully"
 
@@ -122,6 +136,11 @@ kubectl config view \
     --flatten \
     -o jsonpath='{.clusters[].cluster.certificate-authority-data}' \
     | base64 -d > ${WORKDIR}/vault.ca || { log "ERROR" "Failed to retrieve CA certificate"; exit 1; }
+
+# Create a copy in a more accessible location for users
+log "INFO" "Creating copy of CA certificate for macOS users..."
+CA_CERT_COPY="$HOME/.vault.ca"
+cp ${WORKDIR}/vault.ca "$CA_CERT_COPY" || { log "ERROR" "Failed to create copy of CA certificate"; exit 1; }
 
 log "INFO" "Creating namespace $VAULT_K8S_NAMESPACE if it doesn't exist..."
 kubectl create namespace $VAULT_K8S_NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
