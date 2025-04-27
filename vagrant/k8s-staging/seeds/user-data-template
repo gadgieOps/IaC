@@ -63,7 +63,7 @@ write_files:
                 via: 192.168.6.2
             nameservers:
               addresses:
-                - 8.8.8.8
+                - 192.168.6.2
 
 runcmd:
   - userdel -r vagrant || true
