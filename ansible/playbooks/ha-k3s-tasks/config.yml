@@ -24,7 +24,7 @@
 
 - name: Download k3s config
   ansible.builtin.fetch:
-    src: /etc/rancher/k3s/k3s-copy.yaml
+    src: /etc/rancher/k3s/k3s.yaml
     dest: "{{ lookup('env', 'HOME') }}/.kube/k3s-config.yaml"
     owner: "{{ lookup('env', 'USER') }}"
     mode: '0400'
