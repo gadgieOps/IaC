@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: test-issuer
+  namespace: test
+spec:
+  vault:
+    server: https://vault.vault:8200
+    path: pki_int/sign/test
+    caBundleSecretRef:
+      key: vault.ca
+      name: vault-ha-tls
+    auth:
+      kubernetes:
+        mountPath: /v1/auth/kubernetes
+        role: test-issuer
+        serviceAccountRef:
+          name: test-issuer
