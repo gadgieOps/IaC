@@ -10,7 +10,7 @@ spec:
   privateKey:
     algorithm: RSA
     encoding: PKCS1
-    size: 2048
+    size: 4096
 
   duration: 2160h # 90d
   renewBefore: 360h # 15d
@@ -24,12 +24,12 @@ spec:
     organizations:
       - gadgieops
 
-  commonName: test-gadgieops-yem-tls
+  commonName: test.gadgieops.yem
 
   dnsNames:
     - test.gadgieops.yem
-  emailAddresses:
-    - gadge@gadgieops.yem
+  # emailAddresses:
+  #   - gadge@gadgieops.yem
   ipAddresses:
     - 192.168.6.3
     - 192.168.6.4
