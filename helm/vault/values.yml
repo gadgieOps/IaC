@@ -17,10 +17,10 @@ server:
     tag: "1.19.0"
   dev:
     enabled: false
-  ingress:
-    enabled: false
   auditStorage:
     enabled: true
+  ingress:
+    enabled: false
   service:
     enabled: true
     type: NodePort
