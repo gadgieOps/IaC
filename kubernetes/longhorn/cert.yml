@@ -1,0 +1,41 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: longhorn-gadgieops-yem
+  namespace: longhorn
+spec:
+
+  secretName: longhorn-gadgieops-yem-tls
+
+  secretTemplate:
+    annotations:
+      meta.helm.sh/release-name: longhorn
+      meta.helm.sh/release-namespace: longhorn
+    labels:
+      app.kubernetes.io/managed-by: Helm
+
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 4096
+
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+
+  subject:
+    organizations:
+      - gadgieops
+
+  commonName: longhorn.gadgieops.yem
+
+  dnsNames:
+    - longhorn.gadgieops.yem
+
+  ipAddresses:
+    - 192.168.6.3
+    - 192.168.6.4
+    - 192.168.6.5
+
+  issuerRef:
+    name: longhorn-issuer
+    kind: Issuer

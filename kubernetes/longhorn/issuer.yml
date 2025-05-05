@@ -1,0 +1,19 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: longhorn-issuer
+  namespace: longhorn
+spec:
+  vault:
+    path: pki_int/sign/gadgieops.yem
+    server: https://vault.vault:8200
+    caBundleSecretRef:
+      key: ca.crt
+      name: vault-gadgieops-yem-tls
+    auth:
+      kubernetes:
+        role: longhorn-issuer
+        mountPath: /v1/auth/kubernetes
+        serviceAccountRef:
+          name: longhorn-issuer

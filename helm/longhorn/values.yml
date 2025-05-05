@@ -1,7 +1,14 @@
-service:
-  ui:
-    type: NodePort
-    nodePort: 30100
-
 persistence:
   defaultClassReplicaCount: 1
+
+ingress:
+  enabled: true
+  host: longhorn.gadgieops.yem
+  ingressClassName: traefik
+  tls: true
+  tlsSecret: longhorn-gadgieops-yem-tls
+  secureBackends: true
+  secrets:
+    - name: longhorn-gadgieops-yem-tls
+      key: tls.key
+      certificate: tls.crt
