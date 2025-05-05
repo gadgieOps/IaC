@@ -15,11 +15,6 @@ spec:
   duration: 2160h # 90d
   renewBefore: 360h # 15d
 
-  isCA: false
-  usages:
-    - server auth
-    - client auth
-
   subject:
     organizations:
       - gadgieops
@@ -28,8 +23,7 @@ spec:
 
   dnsNames:
     - test.gadgieops.yem
-  # emailAddresses:
-  #   - gadge@gadgieops.yem
+
   ipAddresses:
     - 192.168.6.3
     - 192.168.6.4
