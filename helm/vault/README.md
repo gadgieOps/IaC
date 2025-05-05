@@ -4,9 +4,13 @@ This repository contains configuration for deploying Hashicorp Vault on Kubernet
 
 ## Dependencies
 
-### TLS Setup
+### Initial TLS Setup
+
+Vault will eventually become the CA for the lab, this is one of the larger chicken and gg situations. To initially setup vault use the following script to generate the vault certificates upload to the vault namespace as a secret.
 
 Script: scripts/setup-vault-tls.sh
+
+After vault is functional, terraform/vault/ca is used to enable the CA functionality of vault. helm/cert-manager is then installed and used to request certificates from the vault CA. Once a cert-manager instance is up and running in the vault namespace, the secret changed in the vault values.yml and vault becomes the CA for itself.
 
 See: [Kubernetes TLS Guide](https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls)
 

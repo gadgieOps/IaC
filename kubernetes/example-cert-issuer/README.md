@@ -10,8 +10,8 @@
 
 ```bash
 vault policy write pki - <<EOF
-path "pki_int*"             { capabilities = ["read", "list"] }
-path "pki_int/sign/test"    { capabilities = ["create", "update"] }
-path "pki_int/issue/test"   { capabilities = ["create"] }
+path "pki_int*"                      { capabilities = ["read", "list"] }
+path "pki_int/sign/gadgieops.yem"    { capabilities = ["create", "update"] }
+path "pki_int/issue/gadgieops.yem"   { capabilities = ["create"] }
 EOF
 ```
