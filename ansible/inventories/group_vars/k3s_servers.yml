@@ -13,6 +13,7 @@ dns: true
 dns_ip: "192.168.6.7"
 vault: true
 metallb: true
+longhorn: true
 
 ###
 # Kubernetes
@@ -56,6 +57,7 @@ vault_ports:
   #   port: 32003
 dns_port: 53
 metallb_port: 7946
+longhorn_port: 30100
 
 ###
 # Keepalived

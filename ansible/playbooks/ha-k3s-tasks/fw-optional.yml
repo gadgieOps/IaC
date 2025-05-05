@@ -79,3 +79,33 @@
     comment: "metallb OUT"
   loop: "{{ all_nodes | reject('search', ansible_host) }}"
   when: metallb | default(false) | bool
+
+- name: Allow longhorn tcp traffic IN
+  community.general.ufw:
+    rule: allow
+    direction: in
+    port: "{{ longhorn_port }}"
+    src: "{{ item }}"
+    dest: "{{ ansible_host }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "longhorn IN"
+  loop: "{{ all_nodes | reject('search', ansible_host) }}"
+  when: longhorn | default(false) | bool
+
+- name: Allow longhorn tcp traffic OUT
+  community.general.ufw:
+    rule: allow
+    direction: out
+    port: "{{ longhorn_port }}"
+    src: "{{ ansible_host }}"
+    dest: "{{ item }}"
+    proto: tcp
+    state: enabled
+    insert: 0
+    insert_relative_to: first-ipv4
+    comment: "longhorn OUT"
+  loop: "{{ all_nodes | reject('search', ansible_host) }}"
+  when: longhorn | default(false) | bool

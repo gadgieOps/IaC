@@ -26,6 +26,9 @@ data:
         vault          IN  A 192.168.6.3
         vault          IN  A 192.168.6.4
         vault          IN  A 192.168.6.5
+        longhorn       IN  A 192.168.6.3
+        longhorn       IN  A 192.168.6.4
+        longhorn       IN  A 192.168.6.5
 
         ; These lines indicate to clients that this server supports DNS Service Discovery.
         b._dns-sd._udp           PTR  @
