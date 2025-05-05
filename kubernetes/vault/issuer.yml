@@ -7,10 +7,10 @@ metadata:
 spec:
   vault:
     path: pki_int/sign/gadgieops.yem
-    server: https://vault.vault:8200
+    server: https://vault.gadgieops.yem:32001
     caBundleSecretRef:
-      key: vault.ca
-      name: vault-ha-tls
+      key: ca.crt
+      name: vault-gadgieops-yem-tls
     auth:
       kubernetes:
         role: vault-issuer

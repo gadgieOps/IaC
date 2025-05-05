@@ -7,6 +7,11 @@ spec:
 
   secretName: vault-gadgieops-yem-tls
 
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+
   privateKey:
     algorithm: RSA
     encoding: PKCS1
@@ -22,12 +27,15 @@ spec:
   commonName: vault.gadgieops.yem
 
   dnsNames:
-    - vault.gadgieops.yem
+    - "vault.gadgieops.yem"
+    - "vault.vault"
+    - "vault.vault-internal"
 
   ipAddresses:
     - 192.168.6.3
     - 192.168.6.4
     - 192.168.6.5
+    - 127.0.0.1
 
   issuerRef:
     name: vault-issuer
