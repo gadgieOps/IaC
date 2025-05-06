@@ -16,3 +16,10 @@ spec:
   certificates:
     serverCASecret: pg-gadgieops-yem-tls
     serverTLSSecret: pg-gadgieops-yem-tls
+  managed:
+    roles:
+      - name: gitlab
+        ensure: present
+        login: true
+        passwordSecret:
+          name: gl-pg-user-secret
