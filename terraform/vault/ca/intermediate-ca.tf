@@ -20,7 +20,7 @@ resource "local_file" "csr_request_cert" {
 
 resource "vault_pki_secret_backend_root_sign_intermediate" "intermediate" {
   backend     = vault_mount.pki.path
-  common_name = "new_intermediate"
+  common_name = "gadgieOps INTERMEDIATE CA"
   csr         = vault_pki_secret_backend_intermediate_cert_request.csr-request.csr
   format      = "pem_bundle"
   ttl         = 15480000
@@ -52,6 +52,6 @@ resource "vault_pki_secret_backend_role" "intermediate_role" {
   allow_ip_sans    = true
   key_type         = "rsa"
   key_bits         = 4096
-  allowed_domains  = ["gadgieops.yem", "vault", "vault-internal"]
+  allow_any_name   = true
   allow_subdomains = true
 }

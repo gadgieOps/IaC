@@ -24,3 +24,8 @@ module "longhorn" {
   source = "./modules/cert-issuer"
   name   = "longhorn"
 }
+
+module "gitlab" {
+  source = "./modules/cert-issuer"
+  name   = "gitlab"
+}
