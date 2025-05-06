@@ -1,0 +1,19 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: gitlab-issuer
+  namespace: gitlab
+spec:
+  vault:
+    path: pki_int/sign/gadgieops.yem
+    server: https://vault.vault:8200
+    caBundleSecretRef:
+      key: ca.crt
+      name: vault-gadgieops-yem-tls
+    auth:
+      kubernetes:
+        role: gitlab-issuer
+        mountPath: /v1/auth/kubernetes
+        serviceAccountRef:
+          name: gitlab-issuer

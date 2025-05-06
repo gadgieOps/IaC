@@ -1,0 +1,18 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gl-pg
+  namespace: gitlab
+spec:
+  description: "Gitlab PostgreSQL"
+  instances: 1
+  storage:
+    storageClass: longhorn
+    size: 1Gi
+  walStorage:
+    storageClass: longhorn
+    size: 1Gi
+  certificates:
+    serverCASecret: pg-gadgieops-yem-tls
+    serverTLSSecret: pg-gadgieops-yem-tls
