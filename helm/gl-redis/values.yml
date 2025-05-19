@@ -1,0 +1,9 @@
+redisStandalone:
+  secretName: redis-secret
+TLS:
+  ca: ca.crt
+  cert: tls.crt
+  key: tls.key
+  secret:
+    secretName: gl-redis-gadgieops-yem-tls
+      

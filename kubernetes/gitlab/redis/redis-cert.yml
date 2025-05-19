@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: gitlab-gadgieops-yem
+  name: gl-redis-gadgieops-yem
   namespace: gitlab
 spec:
 
-  secretName: pg-gadgieops-yem-tls
+  secretName: gl-redis-gadgieops-yem-tls
 
   secretTemplate:
     annotations:
@@ -26,22 +26,22 @@ spec:
     organizations:
       - gadgieops
 
-  commonName: gitlab.gadgieops.yem
+  commonName: gl-redis.gadgieops.yem
 
   usages:
     - server auth
   dnsNames:
-    - gl-pg.gadgieops.yem
-    - gl-pg-lb.internal.gadgieops.yem
-    - gl-pg-rw
-    - gl-pg-rw.gitlab
-    - gl-pg-rw.gitlab.svc
-    - gl-pg-r
-    - gl-pg-r.gitlab
-    - gl-pg-r.gitlab.svc
-    - gl-pg-ro
-    - gl-pg-ro.gitlab
-    - gl-pg-ro.gitlab.svc
+    - gl-redis.gadgieops.yem
+    - gl-redis-lb.internal.gadgieops.yem
+    - gl-redis-rw
+    - gl-redis-rw.gitlab
+    - gl-redis-rw.gitlab.svc
+    - gl-redis-r
+    - gl-redis-r.gitlab
+    - gl-redis-r.gitlab.svc
+    - gl-redis-ro
+    - gl-redis-ro.gitlab
+    - gl-redis-ro.gitlab.svc
 
   ipAddresses:
     - 192.168.6.3

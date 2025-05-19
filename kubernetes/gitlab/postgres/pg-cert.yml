@@ -1,0 +1,53 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gitlab-gadgieops-yem
+  namespace: gitlab
+spec:
+
+  secretName: gl-pg-gadgieops-yem-tls
+
+  secretTemplate:
+    annotations:
+      meta.helm.sh/release-name: gitlab
+      meta.helm.sh/release-namespace: gitlab
+    labels:
+      app.kubernetes.io/managed-by: Helm
+
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 4096
+
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+
+  subject:
+    organizations:
+      - gadgieops
+
+  commonName: gl-pg.gadgieops.yem
+
+  usages:
+    - server auth
+  dnsNames:
+    - gl-pg.gadgieops.yem
+    - gl-pg-lb.internal.gadgieops.yem
+    - gl-pg-rw
+    - gl-pg-rw.gitlab
+    - gl-pg-rw.gitlab.svc
+    - gl-pg-r
+    - gl-pg-r.gitlab
+    - gl-pg-r.gitlab.svc
+    - gl-pg-ro
+    - gl-pg-ro.gitlab
+    - gl-pg-ro.gitlab.svc
+
+  ipAddresses:
+    - 192.168.6.3
+    - 192.168.6.4
+    - 192.168.6.5
+
+  issuerRef:
+    name: gitlab-issuer
+    kind: Issuer
