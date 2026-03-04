@@ -16,7 +16,7 @@ resource "aws_security_group_rule" "allow_talos_api" {
   description       = "Allow Talos API access"
   type              = "ingress"
   security_group_id = aws_security_group.talos-dev-cp-sg.id
-  cidr_blocks       = [aws_vpc.talos-dev-vpc.cidr_block]
+  cidr_blocks       = ["0.0.0.0/0"]
   protocol          = "tcp"
   from_port         = 50000
   to_port           = 50000
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "allow_k8s_api" {
   description       = "Allow Kubernetes API access"
   type              = "ingress"
   security_group_id = aws_security_group.talos-dev-cp-sg.id
-  self              = true
+  cidr_blocks       = ["0.0.0.0/0"]
   protocol          = "tcp"
   from_port         = 6443
   to_port           = 6443
