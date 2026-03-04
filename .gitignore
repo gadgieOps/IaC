@@ -132,6 +132,13 @@ override.tf.json
 terraform.rc
 
 ##########################
+#          Talos         #
+##########################
+
+# Talos configuration output directory
+_out
+
+##########################
 #         Vagrant        #
 ##########################
 
