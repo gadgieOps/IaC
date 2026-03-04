@@ -30,6 +30,7 @@ resource "aws_instance" "talos-dev" {
     subnet_id                   = aws_subnet.talos-dev-subnets[count.index].id
     vpc_security_group_ids      = [aws_security_group.talos-dev-cp-sg.id]
     associate_public_ip_address = true
+    enable_primary_ipv6         = false
 
     tags = {
         Name = "talos-dev-${count.index + 1}"
