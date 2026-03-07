@@ -44,6 +44,13 @@ resource "aws_lb_target_group_attachment" "talos-dev-nlb-tg-attachment" {
     port             = 6443
 }
 
+resource "aws_lb_target_group_attachment" "talos-dev-nlb-tg-api-attachment" {
+    count            = length(aws_instance.talos-dev)
+    target_group_arn = aws_lb_target_group.talos-dev-nlb-tg-api.arn
+    target_id        = aws_instance.talos-dev[count.index].id
+    port             = 50000
+}
+
 resource "aws_route53_record" "talos-dev-instances" {
     count   = min(3, length(aws_instance.talos-dev))
     zone_id = data.aws_route53_zone.selected.zone_id
