@@ -73,7 +73,7 @@ resource "aws_lb" "talos-dev-nlb" {
 }
 
 resource "aws_lb_target_group" "talos-dev-nlb-tg" {
-  name        = "talos-k8s-api"
+  name        = "k8s-api"
   port        = 6443
   protocol    = "TCP"
   vpc_id      = aws_vpc.talos-dev-vpc.id
@@ -96,6 +96,37 @@ resource "aws_lb_listener" "talos-dev-nlb-listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.talos-dev-nlb-tg.arn
+  }
+
+  tags = {
+    Name = "talos-dev"
+  }
+}
+
+resource "aws_lb_target_group" "talos-dev-nlb-tg-api" {
+  name        = "talos-api"
+  port        = 50000
+  protocol    = "TCP"
+  vpc_id      = aws_vpc.talos-dev-vpc.id
+  target_type = "instance"
+
+  health_check {
+    protocol = "TCP"
+  }
+
+  tags = {
+    Name = "talos-dev"
+  }
+}
+
+resource "aws_lb_listener" "talos-dev-nlb-listener-api" {
+  load_balancer_arn = aws_lb.talos-dev-nlb.arn
+  port              = 50000
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.talos-dev-nlb-tg-api.arn
   }
 
   tags = {
