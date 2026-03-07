@@ -57,3 +57,15 @@ resource "aws_security_group_rule" "allow_internal" {
   from_port         = -1
   to_port           = -1
 }
+
+###
+# Allow all outbound traffic
+resource "aws_security_group_rule" "allow_all_outbound" {
+  description       = "Allow all outbound traffic"
+  type              = "egress"
+  security_group_id = aws_security_group.talos-dev-cp-sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  protocol          = "-1"
+  from_port         = -1
+  to_port           = -1
+}
