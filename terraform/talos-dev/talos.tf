@@ -31,6 +31,7 @@ resource "aws_instance" "talos-dev" {
     vpc_security_group_ids      = [aws_security_group.talos-dev-cp-sg.id]
     associate_public_ip_address = true
     enable_primary_ipv6         = false
+    user_data                   = file("${path.module}/controlplane.yaml")
 
     tags = {
         Name = "talos-dev-${count.index + 1}"
