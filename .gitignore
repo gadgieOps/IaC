@@ -139,6 +139,14 @@ terraform.rc
 _out
 
 ##########################
+#         Kubernetes     #
+##########################
+
+# Kubernetes configuration files
+.kube/
+.kubeconfig
+
+##########################
 #         Vagrant        #
 ##########################
 
